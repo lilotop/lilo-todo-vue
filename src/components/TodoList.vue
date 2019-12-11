@@ -34,6 +34,7 @@
 <script>
     import { getShortDate, getShortTime } from '../utils';
     import ModalBox from './ModalBox';
+    import axios from 'axios';
 
     export default {
         name: 'TodoList',
@@ -75,62 +76,12 @@
             return {
                 todoForModal: {},
                 modalOpen: false,
-
-                // todo - mock data, replace with real one
-                todos: [
-                    {
-                        'priority': 1,
-                        'done': false,
-                        '_id': '5df0a4d3cf015073bcbaf6c7',
-                        'title': 'Test the TODO app',
-                        'createdAt': '2019-12-11T08:12:03.720Z',
-                        'modifiedAt': '2019-12-11T08:12:03.728Z',
-                    },
-                    {
-                        'priority': 1,
-                        'done': true,
-                        '_id': '5df01b8d00c6b348200ceed8',
-                        'title': 'Schedule the party',
-                        'createdAt': '2019-12-10T22:26:21.418Z',
-                        'modifiedAt': '2019-12-10T22:26:21.423Z',
-                    },
-                    {
-                        'priority': 2,
-                        'done': true,
-                        '_id': '5df01b8d00c6b348200ceeda',
-                        'title': 'Buy storage boxes',
-                        'createdAt': '2019-09-06T22:26:21.418Z',
-                        'modifiedAt': '2019-12-10T22:26:21.423Z',
-                    },
-                    {
-                        'priority': 3,
-                        'done': false,
-                        '_id': '5df01b8d00c6b348200ceed9',
-                        'title': 'Arrange paperwork',
-                        'description': 'Divide into folders, fill out forms, send letters',
-                        'createdAt': '2019-02-01T02:26:21.418Z',
-                        'modifiedAt': '2019-12-10T22:26:21.423Z',
-                    },
-                    {
-                        'priority': 2,
-                        'done': false,
-                        '_id': '5df01b8d00c6b348200ceed7',
-                        'title': 'Call mom',
-                        'description': 'Reminder her about the party',
-                        'createdAt': '2019-12-10T22:26:21.417Z',
-                        'modifiedAt': '2019-12-10T22:26:21.423Z',
-                    },
-                    {
-                        'priority': 2,
-                        'done': false,
-                        '_id': '5df01b8d00c6b348200ceed6',
-                        'title': 'Feed the dog',
-                        'description': 'Don\'t forget to feed the little guy',
-                        'createdAt': '2019-12-10T22:26:21.415Z',
-                        'modifiedAt': '2019-12-10T22:26:21.423Z',
-                    }
-                ]
+                todos: []
             }
+        },
+        async created() {
+            let res = await axios.get('http://localhost:4242/api/v1/todos');
+            this.todos = res.data.data;
         }
 
     }

@@ -8,6 +8,11 @@ A plain vanilla VueJS web site (no css/ui framework) for my TODO project
 npm install
 ```
 
+### Run mock server for using the UI without the server
+```
+npm run mock
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
