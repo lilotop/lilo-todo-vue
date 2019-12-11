@@ -46,7 +46,15 @@
                 return getShortTime(isoDate);
             },
             convertPriority(serverPriority) {
-                return serverPriority[0]; // todo - enum items currently return as array, fix in server code (add 'pre' hook?)
+                switch (serverPriority) {
+                    case 1:
+                        return 'High';
+                    case 2:
+                        return 'Normal';
+                    case 3:
+                        return 'Low';
+
+                }
             },
             showTodo(todo) {
                 this.todoForModal = todo;
@@ -71,9 +79,7 @@
                 // todo - mock data, replace with real one
                 todos: [
                     {
-                        'priority': [
-                            'high'
-                        ],
+                        'priority': 1,
                         'done': false,
                         '_id': '5df0a4d3cf015073bcbaf6c7',
                         'title': 'Test the TODO app',
@@ -81,9 +87,7 @@
                         'modifiedAt': '2019-12-11T08:12:03.728Z',
                     },
                     {
-                        'priority': [
-                            'high'
-                        ],
+                        'priority': 1,
                         'done': true,
                         '_id': '5df01b8d00c6b348200ceed8',
                         'title': 'Schedule the party',
@@ -91,9 +95,7 @@
                         'modifiedAt': '2019-12-10T22:26:21.423Z',
                     },
                     {
-                        'priority': [
-                            'normal'
-                        ],
+                        'priority': 2,
                         'done': true,
                         '_id': '5df01b8d00c6b348200ceeda',
                         'title': 'Buy storage boxes',
@@ -101,9 +103,7 @@
                         'modifiedAt': '2019-12-10T22:26:21.423Z',
                     },
                     {
-                        'priority': [
-                            'low'
-                        ],
+                        'priority': 3,
                         'done': false,
                         '_id': '5df01b8d00c6b348200ceed9',
                         'title': 'Arrange paperwork',
@@ -112,9 +112,7 @@
                         'modifiedAt': '2019-12-10T22:26:21.423Z',
                     },
                     {
-                        'priority': [
-                            'normal'
-                        ],
+                        'priority': 2,
                         'done': false,
                         '_id': '5df01b8d00c6b348200ceed7',
                         'title': 'Call mom',
@@ -123,9 +121,7 @@
                         'modifiedAt': '2019-12-10T22:26:21.423Z',
                     },
                     {
-                        'priority': [
-                            'normal'
-                        ],
+                        'priority': 2,
                         'done': false,
                         '_id': '5df01b8d00c6b348200ceed6',
                         'title': 'Feed the dog',
