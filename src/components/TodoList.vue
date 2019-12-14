@@ -3,6 +3,7 @@
         <h1>TODO App - Edit but no save</h1>
         <table cellpadding="0" cellspacing="0">
             <tr class="todo-header">
+                <th class="todo-header__selection-indicator"></th>
                 <th class="todo-header__title">Title</th>
                 <th class="todo-header__date">Created</th>
                 <th class="todo-header__date">(time)</th>
@@ -11,9 +12,10 @@
                 <th class="todo-header__priority">Priority</th>
                 <th class="todo-header__status">Done</th>
             </tr>
-            <tr class="todo" v-for="todo in todos" :key="todo._id"
+            <tr class="todo" v-for="(todo, index) in todos" :key="todo._id"
                 :class="{'todo_done': todo.done, 'todo_selected': todo._id === todoForModal._id}"
                 @click="showTodo(todo)">
+                <td class="todo__selection-indicator" :class="index === selectedIndex ? 'todo__selection-indicator_selected':''"></td>
                 <td class="todo__title">{{todo.title}}</td>
                 <td class="todo__date">{{getDate(todo.createdAt)}}</td>
                 <td class="todo__date">{{getTime(todo.createdAt)}}</td>
@@ -75,6 +77,34 @@
                 // todo - save to store/server
                 this.modalOpen = false;
                 this.todoForModal = {};
+            },
+            handleKey(e) {
+                if (e.which === 38) {
+                    // up
+                    if (this.selectedIndex === null || this.selectedIndex <= 0) {
+                        this.selectedIndex = this.todos.length - 1;
+                    } else {
+                        this.selectedIndex--;
+                    }
+                }
+                if (e.which === 40) {
+                    // down
+                    if (this.selectedIndex === null || this.selectedIndex >= this.todos.length - 1) {
+                        this.selectedIndex = 0;
+                    } else {
+                        this.selectedIndex++;
+                    }
+                }
+                if (e.which === 32) {
+                    // space - select
+                    if (this.selectedIndex !== null) {
+                        let todo = this.todos[this.selectedIndex];
+                        if (todo) {
+                            this.showTodo(todo);
+                        }
+                    }
+                }
+
             }
 
         },
@@ -82,14 +112,20 @@
             return {
                 todoForModal: {},
                 modalOpen: false,
-                todos: []
+                todos: [],
+                selectedIndex: null,
             }
         },
         async created() {
             let res = await axios.get('http://localhost:4242/api/v1/todos');
             this.todos = res.data.data;
-        }
-
+        },
+        mounted() {
+            window.addEventListener('keyup', this.handleKey);
+        },
+        beforeDestroy() {
+            window.removeEventListener('keyup', this.handleKey);
+        },
     }
 </script>
 
@@ -108,6 +144,14 @@
 
     .todo {
         cursor: pointer;
+
+        .todo__selection-indicator {
+            border-left: 2px solid transparent;
+        }
+
+        .todo__selection-indicator_selected {
+            border-left: 2px solid $primary;
+        }
 
         &:not(.todo_done):hover, &:not(.todo_done).todo_selected {
             background: $highlight;
