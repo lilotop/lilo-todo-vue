@@ -23,7 +23,7 @@
                     <Priority v-model="todo.priority" readonly="true"/>
                 </td>
                 <td class="todo__status" :class="todo.done ? 'todo__status_done':''">
-                    <input type="checkbox" :checked="todo.done" @click.prevent>
+                    <CheckBox :checked="todo.done"/>
                 </td>
             </tr>
         </table>
@@ -40,10 +40,11 @@
     import TodoEditor from "./TodoEditor";
     import { cloneDeep } from 'lodash'
     import Priority from "./Priority";
+    import CheckBox from "./CheckBox";
 
     export default {
         name: 'TodoList',
-        components: { Priority, TodoEditor, ModalBox },
+        components: { CheckBox, Priority, TodoEditor, ModalBox },
         methods: {
             getDate(isoDate) {
                 return getShortDate(isoDate);

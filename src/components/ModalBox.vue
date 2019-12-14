@@ -89,7 +89,7 @@
             margin: 10px;
             cursor: pointer;
             &:focus {
-                outline: $highlight auto 2px;
+                outline: black auto 2px;
             }
         }
     }

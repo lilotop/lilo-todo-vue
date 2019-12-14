@@ -34,5 +34,8 @@
 </script>
 
 <style scoped>
+    select:focus {
+        outline: black auto 2px;
+    }
 
 </style>
