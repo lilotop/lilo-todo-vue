@@ -1,6 +1,6 @@
 <template>
     <div class="todo-list">
-        <h1>TODO App - Read-only version with mock data</h1>
+        <h1>TODO App - Edit but no save</h1>
         <table cellpadding="0" cellspacing="0">
             <tr class="todo-header">
                 <th class="todo-header__title">Title</th>
@@ -25,8 +25,8 @@
                 </td>
             </tr>
         </table>
-        <ModalBox v-if="modalOpen" :title="todoForModal.title" cancel-button-text="Done" @cancel="closeModal" only-cancel>
-            {{todoForModal.description}}
+        <ModalBox v-if="modalOpen" :title="todoForModal.title" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
+            <TodoEditor :todo="todoForModal"/>
         </ModalBox>
     </div>
 </template>
@@ -35,10 +35,12 @@
     import { getShortDate, getShortTime } from '../utils';
     import ModalBox from './ModalBox';
     import axios from 'axios';
+    import TodoEditor from "./TodoEditor";
+    import {cloneDeep   } from 'lodash'
 
     export default {
         name: 'TodoList',
-        components: { ModalBox },
+        components: { TodoEditor, ModalBox },
         methods: {
             getDate(isoDate) {
                 return getShortDate(isoDate);
@@ -58,14 +60,14 @@
                 }
             },
             showTodo(todo) {
-                this.todoForModal = todo;
+                this.todoForModal = cloneDeep(todo);
                 this.modalOpen = true;
             },
             closeModal() {
                 this.modalOpen = false;
                 this.todoForModal = {};
             },
-            saveModalTodo() {
+            saveChanges() {
                 // todo - save to store/server
                 this.modalOpen = false;
                 this.todoForModal = {};

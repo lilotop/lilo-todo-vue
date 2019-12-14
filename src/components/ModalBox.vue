@@ -85,7 +85,7 @@
             background: $primary;
             color: $text_on-primary;
             text-transform: uppercase;
-            padding: 6px;
+            padding: 6px 10px;
             margin: 10px;
             cursor: pointer;
             &:focus {
