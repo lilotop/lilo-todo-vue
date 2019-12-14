@@ -19,7 +19,9 @@
                 <td class="todo__date">{{getTime(todo.createdAt)}}</td>
                 <td class="todo__date">{{getDate(todo.modifiedAt)}}</td>
                 <td class="todo__date">{{getTime(todo.modifiedAt)}}</td>
-                <td class="todo__priority">{{convertPriority(todo.priority)}}</td>
+                <td class="todo__priority">
+                    <Priority v-model="todo.priority" readonly="true"/>
+                </td>
                 <td class="todo__status" :class="todo.done ? 'todo__status_done':''">
                     <input type="checkbox" :checked="todo.done" @click.prevent>
                 </td>
@@ -36,11 +38,12 @@
     import ModalBox from './ModalBox';
     import axios from 'axios';
     import TodoEditor from "./TodoEditor";
-    import {cloneDeep   } from 'lodash'
+    import { cloneDeep } from 'lodash'
+    import Priority from "./Priority";
 
     export default {
         name: 'TodoList',
-        components: { TodoEditor, ModalBox },
+        components: { Priority, TodoEditor, ModalBox },
         methods: {
             getDate(isoDate) {
                 return getShortDate(isoDate);

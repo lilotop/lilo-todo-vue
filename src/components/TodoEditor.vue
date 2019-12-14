@@ -1,19 +1,17 @@
 <template>
     <div class="todo-editor">
         <input v-model="todo.title" type="text" class="title" :class="{title_done: todo.done}">
-        <select v-model="todo.priority" class="priority">
-            <option value="1">H</option>
-            <option value="2">N</option>
-            <option value="3">L</option>
-        </select>
+        <Priority v-model="todo.priority" />
         <input v-model="todo.done" type="checkbox" class="done">
         <textarea class="description" v-model="todo.description"></textarea>
     </div>
 </template>
 
 <script>
+    import Priority from "./Priority";
     export default {
         name: "TodoEditor",
+        components: { Priority },
         props: ['todo']
     }
 </script>
@@ -22,7 +20,7 @@
     .todo-editor {
         display: grid;
         grid-template-rows: 20px auto;
-        grid-template-columns: auto 36px 20px;
+        grid-template-columns: auto 50px 20px;
         grid-column-gap: 10px;
         grid-row-gap: 10px;
     }
