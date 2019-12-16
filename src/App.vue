@@ -9,6 +9,7 @@
 </template>
 
 <style lang="scss">
+  @import "main";
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -29,4 +30,18 @@
     }
   }
 }
+
+.check-box {
+  border: 1px solid darkgray;
+  &.readonly {
+    border: none;
+  }
+  .check-mark {
+    fill: $primary;
+  }
+  &:focus {
+    outline: black auto 2px;
+  }
+}
+
 </style>
