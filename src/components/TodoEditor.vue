@@ -1,8 +1,12 @@
 <template>
     <div class="todo-editor">
         <input v-model="todo.title" type="text" class="title" :class="{title_done: todo.done}">
-        <Priority v-model="todo.priority" class="priority" />
-        <CheckBox v-model="todo.done" class="done"/>
+        <div class="priority">Priority:
+            <Priority v-model="todo.priority" />
+        </div>
+        <div class="done"><label for="done">Done? </label>
+            <CheckBox v-model="todo.done" id="done"/>
+        </div>
         <textarea class="description" v-model="todo.description"></textarea>
     </div>
 </template>
@@ -22,13 +26,13 @@
 
     .todo-editor {
         display: grid;
-        grid-template-rows: 20px auto;
-        grid-template-columns: auto 50px 20px;
+        grid-template-rows: 20px 20px auto;
+        grid-template-columns: auto auto;
         grid-column-gap: 10px;
         grid-row-gap: 10px;
     }
     .title {
-        grid-column: 1;
+        grid-column: span 2;
         &:focus {
             outline: black auto 2px;
         }
@@ -38,15 +42,10 @@
         text-decoration-color: gray;
     }
     .priority {
-        grid-column: 2;
         height: 20px;
     }
-    .done {
-        grid-column: 3;
-        border: 1px solid darkgray;
-    }
     .description {
-        grid-column: 1/4;
+        grid-column: span 2;
         min-height: 100px;
         &:focus {
             outline: black auto 2px;
