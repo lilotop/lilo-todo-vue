@@ -80,6 +80,8 @@
     }
 
     .modal__buttons {
+        display: flex;
+        justify-content: space-evenly;
         button {
             border: none;
             background: $primary;

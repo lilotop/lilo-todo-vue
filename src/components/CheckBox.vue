@@ -7,7 +7,7 @@
             :class="{readonly: isReadOnly}">
         <span v-if="value || checked">
             <svg class="check-mark" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 40 40" :width="size" :height="size">
-                <!--created with vectr.com (it's their built-in check-mark shape-->
+                <!--created with vectr.com (it's their built-in check-mark shape) -->
                 <path d="M21.15 31.19L21.15 31.19L13.74 40L0 23.69L7.42 14.88L13.73 22.39L32.58 0L40 8.81L21.15 31.19Z"></path>
             </svg>
         </span>

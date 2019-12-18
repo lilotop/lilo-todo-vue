@@ -6,9 +6,8 @@
                 <th class="todo-header__selection-indicator"></th>
                 <th class="todo-header__title">Title</th>
                 <th class="todo-header__date">Created</th>
-                <th class="todo-header__date">(time)</th>
                 <th class="todo-header__date">Modified</th>
-                <th class="todo-header__date">(time)</th>
+                <th class="todo-header__project">Project</th>
                 <th class="todo-header__priority">Priority</th>
                 <th class="todo-header__status">Done</th>
             </tr>
@@ -17,10 +16,9 @@
                 @click="showTodo(todo)">
                 <td class="todo__selection-indicator" :class="index === selectedIndex ? 'todo__selection-indicator_selected':''"></td>
                 <td class="todo__title">{{todo.title}}</td>
-                <td class="todo__date">{{getDate(todo.createdAt)}}</td>
-                <td class="todo__date">{{getTime(todo.createdAt)}}</td>
-                <td class="todo__date">{{getDate(todo.modifiedAt)}}</td>
-                <td class="todo__date">{{getTime(todo.modifiedAt)}}</td>
+                <td class="todo__date">{{getDateTime(todo.createdAt)}}</td>
+                <td class="todo__date">{{getDateTime(todo.modifiedAt)}}</td>
+                <td class="todo__project">{{getProjectName(todo.project)}}</td>
                 <td class="todo__priority">
                     <Priority v-model="todo.priority" readonly="true"/>
                 </td>
@@ -36,34 +34,24 @@
 </template>
 
 <script>
-    import { getShortDate, getShortTime } from '../utils';
+    import { cloneDeep} from 'lodash'
+    import { getShortDateTime } from '../utils';
     import ModalBox from './ModalBox';
-    import axios from 'axios';
     import TodoEditor from "./TodoEditor";
-    import { cloneDeep } from 'lodash'
     import Priority from "./Priority";
     import CheckBox from "./CheckBox";
+    import store from "../store";
 
     export default {
         name: 'TodoList',
         components: { CheckBox, Priority, TodoEditor, ModalBox },
         methods: {
-            getDate(isoDate) {
-                return getShortDate(isoDate);
+            getDateTime(isoDate) {
+                return getShortDateTime(isoDate);
             },
-            getTime(isoDate) {
-                return getShortTime(isoDate);
-            },
-            convertPriority(serverPriority) {
-                switch (serverPriority) {
-                    case 1:
-                        return 'High';
-                    case 2:
-                        return 'Normal';
-                    case 3:
-                        return 'Low';
-
-                }
+            getProjectName(projectId) {
+                let project = store.getProject(projectId);
+                return project ? project.name : 'None';
             },
             showTodo(todo) {
                 this.todoForModal = cloneDeep(todo);
@@ -112,13 +100,16 @@
             return {
                 todoForModal: {},
                 modalOpen: false,
-                todos: [],
                 selectedIndex: null,
             }
         },
-        async created() {
-            let res = await axios.get('http://localhost:4242/api/v1/todos');
-            this.todos = res.data.data;
+        computed: {
+            todos() {
+                return store.todos;
+            },
+            projects() {
+                return store.projects;
+            }
         },
         mounted() {
             window.addEventListener('keyup', this.handleKey);
@@ -172,6 +163,11 @@
 
         .todo__title {
             text-align: start;
+        }
+
+        .todo__project {
+            text-align: start;
+            padding-left: 30px;
         }
 
         .todo__date {

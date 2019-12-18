@@ -1,0 +1,48 @@
+<template>
+<span class="project-selector">
+    <span type="text" v-if="readonly" v-bind="$attrs">{{getName($attrs.value)}}</span>
+    <select v-else v-bind="$attrs" @input="$emit('input', $event.target.value)" class="project" :title="getDescription($attrs.value)">
+        <option :value="undefined" title="Not assigned to any project">None</option>
+        <option v-for="project in projects" :value="project._id" :title="project.description">{{project.name}}</option>
+    </select>
+
+</span>
+
+</template>
+
+<script>
+    import axios from 'axios';
+    import { reduce } from 'lodash'
+    import store from "../store";
+
+    export default {
+        name: "ProjectSelector",
+        props: {
+            readonly: {
+                default: false
+            }
+        },
+        computed: {
+            projects() {
+                return store.projects;
+            }
+        },
+        methods: {
+            getName(projectId) {
+                let project = store.getProject(projectId);
+                return project ? project.name : 'None';
+            },
+            getDescription(projectId) {
+                let project = store.getProject(projectId);
+                return project ? project.description : 'None';
+            }
+        },
+    }
+</script>
+
+<style scoped>
+    select:focus {
+        outline: black auto 2px;
+    }
+
+</style>
