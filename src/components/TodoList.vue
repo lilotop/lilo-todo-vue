@@ -1,32 +1,36 @@
 <template>
     <div class="todo-list">
         <h1>TODO App - Edit but no save</h1>
-        <table cellpadding="0" cellspacing="0">
-            <tr class="todo-header">
-                <th class="todo-header__selection-indicator"></th>
-                <th class="todo-header__title">Title</th>
-                <th class="todo-header__date">Created</th>
-                <th class="todo-header__date">Modified</th>
-                <th class="todo-header__project">Project</th>
-                <th class="todo-header__priority">Priority</th>
-                <th class="todo-header__status">Done</th>
-            </tr>
-            <tr class="todo" v-for="(todo, index) in todos" :key="todo._id"
-                :class="{'todo_done': todo.done, 'todo_selected': todo._id === todoForModal._id}"
-                @click="showTodo(todo)">
-                <td class="todo__selection-indicator" :class="index === selectedIndex ? 'todo__selection-indicator_selected':''"></td>
-                <td class="todo__title">{{todo.title}}</td>
-                <td class="todo__date">{{getDateTime(todo.createdAt)}}</td>
-                <td class="todo__date">{{getDateTime(todo.modifiedAt)}}</td>
-                <td class="todo__project">{{getProjectName(todo.project)}}</td>
-                <td class="todo__priority">
-                    <Priority v-model="todo.priority" readonly="true"/>
-                </td>
-                <td class="todo__status" :class="todo.done ? 'todo__status_done':''">
-                    <CheckBox :checked="todo.done"/>
-                </td>
-            </tr>
-        </table>
+
+        <div class="todo-list__content">
+            <div class="todo-list__filter">Filter by project: <ProjectSelector v-model="projectFilter" :all="ALL_PROJECTS"/> </div>
+            <table cellpadding="0" cellspacing="0">
+                <tr class="todo-header">
+                    <th class="todo-header__selection-indicator"></th>
+                    <th class="todo-header__title">Title</th>
+                    <th class="todo-header__date">Created</th>
+                    <th class="todo-header__date">Modified</th>
+                    <th class="todo-header__project">Project</th>
+                    <th class="todo-header__priority">Priority</th>
+                    <th class="todo-header__status">Done</th>
+                </tr>
+                <tr class="todo" v-for="(todo, index) in todos" :key="todo._id"
+                    :class="{'todo_done': todo.done, 'todo_selected': todo._id === todoForModal._id}"
+                    @click="showTodo(todo)">
+                    <td class="todo__selection-indicator" :class="index === selectedIndex ? 'todo__selection-indicator_selected':''"></td>
+                    <td class="todo__title">{{todo.title}}</td>
+                    <td class="todo__date">{{getDateTime(todo.createdAt)}}</td>
+                    <td class="todo__date">{{getDateTime(todo.modifiedAt)}}</td>
+                    <td class="todo__project">{{getProjectName(todo.project)}}</td>
+                    <td class="todo__priority">
+                        <Priority v-model="todo.priority" readonly="true"/>
+                    </td>
+                    <td class="todo__status" :class="todo.done ? 'todo__status_done':''">
+                        <CheckBox :checked="todo.done"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
         <ModalBox v-if="modalOpen" :title="todoForModal.title" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
@@ -41,10 +45,11 @@
     import Priority from "./Priority";
     import CheckBox from "./CheckBox";
     import store from "../store";
+    import ProjectSelector from "./ProjectSelector";
 
     export default {
         name: 'TodoList',
-        components: { CheckBox, Priority, TodoEditor, ModalBox },
+        components: { ProjectSelector, CheckBox, Priority, TodoEditor, ModalBox },
         methods: {
             getDateTime(isoDate) {
                 return getShortDateTime(isoDate);
@@ -101,11 +106,18 @@
                 todoForModal: {},
                 modalOpen: false,
                 selectedIndex: null,
+                ALL_PROJECTS: 'all',
+                projectFilter: 'all'
             }
         },
         computed: {
             todos() {
-                return store.todos;
+                if(this.projectFilter === this.ALL_PROJECTS) {
+                    return store.todos;
+                }
+                else {
+                    return store.getTodosByProject(this.projectFilter);
+                }
             },
             projects() {
                 return store.projects;
@@ -127,10 +139,15 @@
         padding: 50px;
     }
 
-    table {
-        width: 100%;
+    .todo-list__content {
         padding: 50px;
         box-shadow: 0px 0px 30px 4px rgba(0, 0, 0, 0.3);
+    }
+    .todo-list__filter {
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
     }
 
     .todo {

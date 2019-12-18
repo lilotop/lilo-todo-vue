@@ -76,7 +76,7 @@
     }
 
     .modal__body {
-        padding: 20px;
+        padding: 10px;
     }
 
     .modal__buttons {
@@ -90,6 +90,8 @@
             padding: 6px 10px;
             margin: 10px;
             cursor: pointer;
+            flex-grow: 1;
+            flex-basis: 0;
             &:focus {
                 outline: black auto 2px;
             }

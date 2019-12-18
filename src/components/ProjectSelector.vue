@@ -2,7 +2,8 @@
 <span class="project-selector">
     <span type="text" v-if="readonly" v-bind="$attrs">{{getName($attrs.value)}}</span>
     <select v-else v-bind="$attrs" @input="$emit('input', $event.target.value)" class="project" :title="getDescription($attrs.value)">
-        <option :value="undefined" title="Not assigned to any project">None</option>
+        <option v-if="all" :value="all" :title="getDescription(all)">All</option>
+        <option :value="undefined" :title="getDescription()">None</option>
         <option v-for="project in projects" :value="project._id" :title="project.description">{{project.name}}</option>
     </select>
 
@@ -18,9 +19,8 @@
     export default {
         name: "ProjectSelector",
         props: {
-            readonly: {
-                default: false
-            }
+            readonly: Boolean,
+            all: String
         },
         computed: {
             projects() {
@@ -33,8 +33,15 @@
                 return project ? project.name : 'None';
             },
             getDescription(projectId) {
-                let project = store.getProject(projectId);
-                return project ? project.description : 'None';
+                if(!projectId){
+                    return 'Not assigned to any project';
+                } else if (this.all && projectId === this.all){
+                    return 'Show all projects';
+                }
+                else {
+                    let project = store.getProject(projectId);
+                    return project.description || ''; // in case the user did not provide a description
+                }
             }
         },
     }
