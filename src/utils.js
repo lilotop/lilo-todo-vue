@@ -8,3 +8,14 @@ export function getShortDateTime(isoDate) {
     let min = date.getMinutes();
     return `${day}/${month}/${year} ${hour}:${min}`
 }
+
+export function getPriorityName(priority){
+    switch(priority) {
+        case 1:
+            return 'High';
+        case 2:
+            return 'None';
+        case 3:
+            return 'Low';
+    }
+}

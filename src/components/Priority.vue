@@ -10,6 +10,8 @@
 </template>
 
 <script>
+    import { getPriorityName } from "../utils";
+
     export default {
         name: "Priority",
         props: {
@@ -19,14 +21,7 @@
         },
         methods: {
             getLabel(value) {
-                switch(value) {
-                    case 1:
-                        return 'High';
-                    case 2:
-                        return 'None';
-                    case 3:
-                        return 'Low';
-                }
+                return getPriorityName(value);
             }
         }
 
