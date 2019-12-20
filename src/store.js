@@ -5,6 +5,7 @@ let loaded;
 let store = Vue.observable({
     projects: [],
     todos: [],
+    user: {},
     getProject(projectId) {
         return find(store.projects, ['_id',projectId])
     },
@@ -18,11 +19,23 @@ let store = Vue.observable({
     },
     async loadFromServer(forceReload) {
         if(!loaded || forceReload) {
-            let res = await Promise.all([services.getTodos(), services.getProjects()]);
-            store.todos = res[0].data.data;
-            store.projects = res[1].data.data;
-            loaded = true;
+            try {
+                let res = await Promise.all([services.getTodos(), services.getProjects(), services.getUser()]);
+                store.todos = res[0].data.data;
+                store.projects = res[1].data.data;
+                store.user = res[2].data.data;
+                loaded = true;
+            }
+            catch(err){
+                store.reset();
+                console.log('Failed to reload store, error: ',err.response.status);
+            }
         }
+    },
+    reset() {
+        store.projects = [];
+        store.todos = [];
+        store.user = {};
     }
 });
 export default store;

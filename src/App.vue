@@ -1,18 +1,38 @@
 <template>
     <div id="app">
         <div class="app__masthead">
-            <div class="app__title">TODO App - Edit but no save</div>
+            <div class="app__title">TODO App <span v-if="email"> - {{email}}</span></div>
             <div class="app__nav">
-                <router-link to="/todos">Todos</router-link>
-                |
-                <router-link to="/projects">Projects</router-link>
-                |
+                <router-link v-if="email" to="/todos">Todos</router-link>
+                <router-link v-if="email" to="/projects">Projects</router-link>
                 <router-link to="/about">About</router-link>
+                <a href="" v-if="email" @click="logout">Logout</a>
+                <router-link v-if="!email" to="/login">Login</router-link>
             </div>
         </div>
         <router-view/>
     </div>
 </template>
+
+<script>
+    import store from "./store";
+    import services from "./services";
+
+    export default {
+        methods: {
+            logout() {
+                store.reset();
+                services.logout();
+                this.$router.push({name: 'login'});
+            }
+        },
+        computed: {
+            email() {
+                return store.user.email;
+            }
+        }
+    }
+</script>
 
 <style lang="scss">
     @import "main";
@@ -38,6 +58,7 @@
 
             a {
                 color: #2c3e50;
+                margin: 0 10px;
 
                 &.router-link-active {
                     color: #42b983;
