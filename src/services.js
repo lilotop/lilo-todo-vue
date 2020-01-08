@@ -12,7 +12,7 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.response.use(response => response, error => {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
         if(router.currentRoute.name !== 'login') {
             router.push({name:'login'});
         }
