@@ -17,6 +17,10 @@ let store = Vue.observable({
             return filter(store.todos, todo => !todo.project);
         }
     },
+    async updateTodo(todo) {
+        await services.updateTodo(todo._id, todo);
+        await this.loadFromServer(true);
+    },
     async loadFromServer(forceReload) {
         if(!loaded || forceReload) {
             try {

@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-            <table cellpadding="0" cellspacing="0">
+            <table>
                 <tr class="list__headers">
                     <th class="list__headers__selection-indicator"></th>
                     <th class="list__headers__column" v-for="col in columns">{{col.header}}</th>
@@ -28,14 +28,14 @@
                 if (e.which === 38) {
                     // up
                     if (this.pointerIndex === null || this.pointerIndex <= 0) {
-                        this.pointerIndex = this.list.length - 1;
+                        this.pointerIndex = this.items.length - 1;
                     } else {
                         this.pointerIndex--;
                     }
                 }
                 if (e.which === 40) {
                     // down
-                    if (this.pointerIndex === null || this.pointerIndex >= this.list.length - 1) {
+                    if (this.pointerIndex === null || this.pointerIndex >= this.items.length - 1) {
                         this.pointerIndex = 0;
                     } else {
                         this.pointerIndex++;
@@ -85,6 +85,10 @@
 
     table {
         width: 100%;
+        border-spacing: 0;
+        th {
+            padding: 0;
+        }
     }
 
     .list__item {

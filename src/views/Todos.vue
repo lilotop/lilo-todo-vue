@@ -5,6 +5,7 @@
         <ModalBox v-if="modalOpen" :title="todoForModal.title" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
+        <BlockUI :block="blockUI" text="Please wait..."></BlockUI>
     </div>
 </template>
 
@@ -16,10 +17,12 @@
     import ProjectSelector from '../components/ProjectSelector';
     import ModalBox from '../components/ModalBox';
     import TodoEditor from '../components/TodoEditor';
+    import BlockUI from "../components/BlockUI";
 
     export default {
         name: 'todos',
         components: {
+            BlockUI,
             TodoEditor,
             ModalBox,
             List, ProjectSelector
@@ -29,6 +32,7 @@
         },
         data() {
             return {
+                blockUI: false,
                 todoForModal: {},
                 modalOpen: false,
                 ALL_PROJECTS: 'all',
@@ -117,8 +121,10 @@
                 this.modalOpen = false;
                 this.todoForModal = {};
             },
-            saveChanges() {
-                // todo - save to store/server
+            async saveChanges() {
+                this.blockUI = true;
+                await store.updateTodo(this.todoForModal);
+                this.blockUI = false;
                 this.modalOpen = false;
                 this.todoForModal = {};
             }
