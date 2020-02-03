@@ -1,13 +1,13 @@
 <template>
     <div class="modal__backdrop">
-        <div class="modal">
+        <div class="modal" role="dialog" aria-modal="true">
             <div v-if="title" class="modal__header">{{title}}</div>
             <div class="modal__body">
                 <slot><i>no content</i></slot>
             </div>
             <div class="modal__buttons">
-                <button @click="$emit('ok')" v-if="!onlyCancel">{{okButtonText}}</button>
-                <button @click="$emit('cancel')">{{cancelButtonText}}</button>
+                <button class="btn" @click="$emit('ok')" v-if="!onlyCancel">{{okButtonText}}</button>
+                <button class="btn" @click="$emit('cancel')">{{cancelButtonText}}</button>
             </div>
         </div>
     </div>
@@ -29,15 +29,34 @@
             onlyCancel: Boolean
         },
         mounted() {
-            window.addEventListener('keyup', this.handleKey);
+            window.addEventListener('keydown', this.handleKey);
         },
         beforeDestroy() {
-            window.removeEventListener('keyup', this.handleKey);
+            window.removeEventListener('keydown', this.handleKey);
         },
         methods: {
             handleKey(e) {
-                if (e.which === 27) {
+                if (e.keyCode === 27) {
                     this.$emit('cancel');
+                }
+                if (e.keyCode === 9) {
+                    let focusable = this.$el.querySelectorAll('input,button,select,.check-box');
+                    if (focusable.length) {
+                        let first = focusable[0];
+                        let last = focusable[focusable.length - 1];
+                        let shift = e.shiftKey;
+                        if (shift) {
+                            if (e.target === first) {
+                                last.focus();
+                                e.preventDefault();
+                            }
+                        } else {
+                            if (e.target === last) {
+                                first.focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -82,19 +101,11 @@
     .modal__buttons {
         display: flex;
         justify-content: space-evenly;
-        button {
-            border: none;
-            background: $primary;
-            color: $text_on-primary;
-            text-transform: uppercase;
-            padding: 6px 10px;
+
+        .btn {
             margin: 10px;
-            cursor: pointer;
             flex-grow: 1;
             flex-basis: 0;
-            &:focus {
-                outline: black auto 2px;
-            }
         }
     }
 </style>

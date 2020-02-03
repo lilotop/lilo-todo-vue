@@ -25,6 +25,12 @@
         components: { CheckBox },
         methods: {
             handleKey(e) {
+
+                // only respond to key strokes outside input elements
+                if(e.target.localName !== 'body') {
+                    return;
+                }
+
                 if (e.which === 38) {
                     // up
                     if (this.pointerIndex === null || this.pointerIndex <= 0) {

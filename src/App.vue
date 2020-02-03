@@ -43,7 +43,7 @@
         -moz-osx-font-smoothing: grayscale;
         color: #2c3e50;
         margin: 50px;
-        box-shadow: 0px 0px 30px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 30px 4px rgba(0, 0, 0, 0.3);
         padding: 30px;
     }
 
@@ -79,6 +79,18 @@
             fill: $primary;
         }
 
+        &:focus {
+            outline: black auto 2px;
+        }
+    }
+
+    .btn {
+        border: none;
+        background: $primary;
+        color: $text_on-primary;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        cursor: pointer;
         &:focus {
             outline: black auto 2px;
         }

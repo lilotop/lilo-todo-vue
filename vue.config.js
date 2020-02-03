@@ -1,6 +1,6 @@
 module.exports = {
     configureWebpack: {
-        devtool: 'inline-source-map',
+        devtool: 'eval-source-map',
         mode: "development"
     }
 };

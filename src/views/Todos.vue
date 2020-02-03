@@ -1,8 +1,15 @@
 <template>
     <div class="todos">
-        <div class="todos__filter">Filter by project: <ProjectSelector v-model="projectFilter" :all="ALL_PROJECTS"/> </div>
+        <div class="todos__controls">
+            <button class="todos__controls__create-button btn" @click="newTodo">Create New Todo</button>
+            <div class="todos__controls__filter">Filter by project:
+                <ProjectSelector v-model="projectFilter" :all="ALL_PROJECTS"/>
+            </div>
+        </div>
         <List :columns="columns" :items="todos" @selected="showTodo"/>
-        <ModalBox v-if="modalOpen" :title="todoForModal.title" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
+
+        <!-- helper components -->
+        <ModalBox v-if="modalOpen" :title="todoForModal.title || '< untitled >'" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
         <BlockUI :block="blockUI" text="Please wait..."></BlockUI>
@@ -12,7 +19,7 @@
 <script>
     import store from '../store';
     import { getPriorityName, getShortDateTime } from '../utils';
-    import {cloneDeep} from 'lodash';
+    import { cloneDeep } from 'lodash';
     import List from '../components/List';
     import ProjectSelector from '../components/ProjectSelector';
     import ModalBox from '../components/ModalBox';
@@ -73,10 +80,9 @@
         },
         computed: {
             todos() {
-                if(this.projectFilter === this.ALL_PROJECTS) {
+                if (this.projectFilter === this.ALL_PROJECTS) {
                     return store.todos;
-                }
-                else {
+                } else {
                     return store.getTodosByProject(this.projectFilter);
                 }
             },
@@ -85,20 +91,18 @@
                     // handling the conflict:
                     // in data - an undefined project id means no project
                     // in url - an undefined project id means all projects
-                    if(!this.project){
+                    if (!this.project) {
                         return this.ALL_PROJECTS;
-                    }
-                    else if(this.project === this.NO_PROJECT) {
+                    } else if (this.project === this.NO_PROJECT) {
                         return undefined;
-                    }
-                    else {
+                    } else {
                         return this.project;
                     }
 
                 },
                 set(projectId) {
                     // don't send an empty project id in the url because this means 'all projects'
-                    this.$router.push({ name: 'todos', query: {project: projectId || this.NO_PROJECT }});
+                    this.$router.push({ name: 'todos', query: { project: projectId || this.NO_PROJECT } });
                 }
             }
         },
@@ -111,10 +115,21 @@
                 return project ? project.name : 'None';
             },
             getPriorityName(priority) {
-              return getPriorityName(priority)
+                return getPriorityName(priority)
             },
             showTodo(todo) {
                 this.todoForModal = cloneDeep(todo);
+                this.modalOpen = true;
+            },
+            newTodo() {
+                this.todoForModal = {};
+
+                // if we're filtered on specific project, preselect this project for the new item
+                let project = this.$route.query.project;
+                if(project && project !== this.NO_PROJECT && project !== this.ALL_PROJECTS) {
+                    this.todoForModal.project = project;
+                }
+
                 this.modalOpen = true;
             },
             closeModal() {
@@ -122,8 +137,13 @@
                 this.todoForModal = {};
             },
             async saveChanges() {
+
                 this.blockUI = true;
-                await store.updateTodo(this.todoForModal);
+                if(this.todoForModal._id) {
+                    await store.updateTodo(this.todoForModal);
+                } else {
+                    await store.addTodo(this.todoForModal);
+                }
                 this.blockUI = false;
                 this.modalOpen = false;
                 this.todoForModal = {};
@@ -139,7 +159,10 @@
 </script>
 
 <style scoped>
-    .todos__filter {
+    .todos__controls {
         margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 </style>

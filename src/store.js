@@ -21,6 +21,10 @@ let store = Vue.observable({
         await services.updateTodo(todo._id, todo);
         await this.loadFromServer(true);
     },
+    async addTodo(todo) {
+        await services.addTodo(todo);
+        await this.loadFromServer(true);
+    },
     async loadFromServer(forceReload) {
         if(!loaded || forceReload) {
             try {

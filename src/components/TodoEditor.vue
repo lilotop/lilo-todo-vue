@@ -23,7 +23,10 @@
     export default {
         name: "TodoEditor",
         components: { ProjectSelector, CheckBox, Priority },
-        props: ['todo']
+        props: ['todo'],
+        mounted() {
+            this.$el.querySelector('.title').focus();
+        }
     }
 </script>
 
