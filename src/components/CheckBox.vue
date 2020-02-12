@@ -36,7 +36,9 @@
         },
         methods: {
             notifyToggle() {
-                this.$emit('input',!this.value);
+                if(!this.isReadOnly) {
+                    this.$emit('input', !this.value);
+                }
             }
         },
         computed: {
