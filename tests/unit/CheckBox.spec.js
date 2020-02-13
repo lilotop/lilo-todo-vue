@@ -2,6 +2,11 @@ import { mount } from '@vue/test-utils'
 import CheckBox from '@/components/CheckBox.vue'
 import Vue from 'vue';
 
+/***
+ * Generates a wrapper that contains a parent component bound to the checkbox with v-model.
+ * @param initialValue the initial state of the checkbox (checked/unchecked)
+ * @returns the wrapper of the parent component holding this checkbox
+ */
 function createVModelWrapper(initialValue) {
     let parent = Vue.component('parent', {
         components: { CheckBox },
@@ -18,6 +23,11 @@ function createVModelWrapper(initialValue) {
     return mount(parent);
 }
 
+/***
+ * Generates a wrapper that contains a parent component bound to the checkbox with v-model and a label that is connected with a for attribute.
+ * @param initialValue the initial state of the checkbox (checked/unchecked)
+ * @returns the wrapper of the parent component holding this checkbox and a label
+ */
 function createVModelWrapperWithLabel(initialValue) {
     let parent = Vue.component('parent', {
         components: { CheckBox },
