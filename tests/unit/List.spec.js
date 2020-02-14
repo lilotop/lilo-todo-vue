@@ -56,5 +56,8 @@ describe('List.vue', () => {
         wrapper.find('.list__item').trigger('click');
         expect(wrapper.emitted().selected).toEqual([[{color:'red',name:'alpha'}]]);
     });
+    test('failing test', ()=> {
+        expect(true).toBeFalsy();
+    })
 
 });
