@@ -119,6 +119,14 @@ describe('CheckBox.vue', () => {
         wrapper.find('span').setProps({ checked: false }); // should now be readonly
         wrapper.find('label').trigger('click');
         expect(wrapper.vm.value).toEqual(false);
-    })
+    });
+
+    test('release label onclick handler on destroy', () => {
+        let wrapper = createVModelWrapperWithLabel();
+        let label = wrapper.find('label').element;
+        expect(label.onclick).toBeDefined();
+        wrapper.destroy();
+        expect(label.onclick).toBe(null);
+    });
 
 });
