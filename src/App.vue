@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <OfflineIndicator></OfflineIndicator>
         <div class="app__masthead">
             <div class="app__title">TODO App <span v-if="email"> - {{email}}</span></div>
             <div class="app__nav">
@@ -17,8 +18,10 @@
 <script>
     import store from "./store";
     import services from "./services";
+    import OfflineIndicator from "./components/OfflineIndicator";
 
     export default {
+        components: { OfflineIndicator },
         methods: {
             logout() {
                 store.reset();

@@ -1,6 +1,6 @@
 <template>
 <span class="project-selector">
-    <span type="text" v-if="readonly" v-bind="$attrs">{{getName($attrs.value)}}</span>
+    <span v-if="readonly" v-bind="$attrs">{{getName($attrs.value)}}</span>
     <select v-else v-bind="$attrs" @input="$emit('input', $event.target.value)" class="project" :title="getDescription($attrs.value)">
         <option v-if="all" :value="all" :title="getDescription(all)">All</option>
         <option :value="undefined" :title="getDescription()">None</option>
@@ -45,9 +45,13 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    @import '../main';
+
     select:focus {
         outline: black auto 2px;
     }
-
+    select option:checked,option:hover,option:active,option:focus {
+        background-color: $primary !important;
+    }
 </style>

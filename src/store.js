@@ -1,11 +1,12 @@
 import Vue from 'vue';
-import { find, filter } from "lodash";
+import { find, filter, get } from "lodash";
 import services from "./services";
 let loaded;
 let store = Vue.observable({
     projects: [],
     todos: [],
     user: {},
+    error: null,
     getProject(projectId) {
         return find(store.projects, ['_id',projectId])
     },
@@ -32,11 +33,16 @@ let store = Vue.observable({
                 store.todos = res[0].data.data;
                 store.projects = res[1].data.data;
                 store.user = res[2].data.data;
+                store.error = null;
                 loaded = true;
             }
             catch(err){
                 store.reset();
-                console.log('Failed to reload store, error: ',err.response.status);
+                if(get(err,'response.status') === 401) {
+                    return; // it's not an error, just not logged in yet
+                }
+                store.error = err.message || err.response.status;
+                console.log('Failed to load store, error: ', store.error);
             }
         }
     },
