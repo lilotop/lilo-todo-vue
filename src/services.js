@@ -3,7 +3,8 @@ import router from "./router/index";
 import Vue from 'vue';
 
 const apiClient = axios.create({
-    baseURL: `http://localhost:4242/api/v1`,
+    // baseURL: `http://localhost:4242/api/v1`, // local (clone lilo-todo-server)
+    baseURL: `https://lilo-todo-server.herokuapp.com/api/v1`,
     withCredentials: false, // This is the default
     headers: {
         Accept: 'application/json',
