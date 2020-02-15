@@ -35,7 +35,10 @@ const routes = [
 ];
 
 const router = new VueRouter({
-    mode: 'history',
+    // can't use history mode - hosting on github pages where i can't set a fallback 404
+    // so for example reloading the page /todos gives us 404 because it doesn't actually exist
+    // the default mode uses hash symbol which is considered 'same page' route
+    // mode: 'history',
     base: process.env.BASE_URL,
     routes
 });
