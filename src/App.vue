@@ -3,13 +3,7 @@
         <OfflineIndicator></OfflineIndicator>
         <div class="app__masthead">
             <div class="app__title">TODO App <span v-if="email"> - {{email}}</span></div>
-            <div class="app__nav">
-                <router-link v-if="email" to="/todos">Todos</router-link>
-                <router-link v-if="email" to="/projects">Projects</router-link>
-                <router-link to="/about">About</router-link>
-                <a href="" v-if="email" @click="logout">Logout</a>
-                <router-link v-if="!email" to="/login">Login</router-link>
-            </div>
+            <NavMenu :links="navLinks"></NavMenu>
         </div>
         <router-view/>
     </div>
@@ -19,19 +13,34 @@
     import store from "./store";
     import services from "./services";
     import OfflineIndicator from "./components/OfflineIndicator";
+    import NavMenu from "./components/NavMenu";
 
     export default {
-        components: { OfflineIndicator },
+        components: { NavMenu, OfflineIndicator },
         methods: {
             logout() {
                 store.reset();
                 services.logout();
-                this.$router.push({name: 'login'});
+                this.$router.push({ name: 'login' });
             }
         },
         computed: {
             email() {
                 return store.user.email;
+            },
+            navLinks() {
+                let links = [];
+                if (this.email) {
+                    links.push({ label: 'Todos', path: '/todos' });
+                    links.push({ label: 'Projects', path: '/projects' });
+                }
+                links.push({ label: 'About', path: '/about' });
+                if (this.email) {
+                    links.push({ label: 'Logout', handler: this.logout });
+                } else {
+                    links.push({ label: 'Login', path: '/login' });
+                }
+                return links;
             }
         }
     }
@@ -57,17 +66,6 @@
         font-weight: bold;
         color: #2c3e50;
 
-        .app__nav {
-
-            a {
-                color: #2c3e50;
-                margin: 0 10px;
-
-                &.router-link-active {
-                    color: #42b983;
-                }
-            }
-        }
     }
 
 
@@ -94,6 +92,7 @@
         text-transform: uppercase;
         padding: 6px 10px;
         cursor: pointer;
+
         &:focus {
             outline: black auto 2px;
         }
