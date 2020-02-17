@@ -158,11 +158,14 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .todos__controls {
         margin-bottom: 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        .todos__controls__create-button {
+            margin-right: 10px;
+        }
     }
 </style>
