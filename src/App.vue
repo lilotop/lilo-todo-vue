@@ -68,6 +68,14 @@
 
     }
 
+    @media screen and (max-width: 700px) {
+        #app {
+            margin: 0;
+        }
+        .app__masthead {
+            margin-bottom: 30px;
+        }
+    }
 
     .check-box {
         border: 1px solid darkgray;

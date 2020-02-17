@@ -4,7 +4,7 @@
             <router-link v-if="link.path" :to="link.path">{{link.label}}</router-link>
             <a href="" v-if="link.handler" @click="link.handler">{{link.label}}</a>
         </span>
-        <button class="nav-menu__toggle btn" @click="isOpen = !isOpen">{{isOpen ? 'X' : '#'}}</button>
+        <button class="nav-menu__toggle btn" @click="isOpen = !isOpen">{{isOpen ? '&#9650;' : '&#9776;'}}</button>
     </div>
 
 </template>
@@ -51,7 +51,7 @@
             padding: 5px;
             .nav-menu__link {
                 display: block;
-                margin-bottom: 10px;
+                margin: 10px;
             }
         }
         .nav-menu .nav-menu__toggle {

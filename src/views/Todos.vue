@@ -167,5 +167,27 @@
         .todos__controls__create-button {
             margin-right: 10px;
         }
+        .todos__controls__filter {
+            display: flex;
+            .project-selector {
+                margin-left: 10px;
+            }
+
+        }
     }
+    @media screen and (max-width: 700px) {
+        .todos__controls {
+            .todos__controls__filter {
+                flex-direction: column;
+
+                .project-selector {
+                    margin-left: 0;
+                }
+            }
+            .btn {
+                height: 60px;
+            }
+        }
+    }
+
 </style>
