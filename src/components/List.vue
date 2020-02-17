@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <table class="desktop-list">
+        <table class="desktop-list" v-if="!isSmallScreen">
             <tr class="list__headers">
                 <th class="list__headers__selection-indicator"></th>
                 <th class="list__headers__column" v-for="col in columns">{{col.header}}</th>
@@ -14,16 +14,16 @@
                 </td>
             </tr>
         </table>
-        <div class="mobile-list">
+        <div class="mobile-list" v-if="isSmallScreen">
             <table class="list__item" v-for="item in items"
                    @click="itemSelected(item)">
-            <tr v-for="col in columns">
-                <th>{{col.header}}</th>
-                <td class="list__item__column">
-                    <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
-                    <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
-                </td>
-            </tr>
+                <tr v-for="col in columns">
+                    <th>{{col.header}}</th>
+                    <td class="list__item__column">
+                        <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
+                        <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -78,18 +78,26 @@
         data() {
             return {
                 pointerIndex: null,
+                isSmallScreen: false,
             }
         },
         props: {
             columns: Array,
             items: Array
         },
-        computed: {},
         mounted() {
             window.addEventListener('keyup', this.handleKey);
+            // media query - responsive ui support
+            this.respondToMediaChanges = (mediaQuery) => {
+                this.isSmallScreen = !!mediaQuery.matches;
+            };
+            this.mediaQuery = window.matchMedia("(max-width: 700px)");
+            this.respondToMediaChanges(this.mediaQuery); // call listener function once
+            this.mediaQuery.addEventListener('change', this.respondToMediaChanges); // register for changes
         },
         beforeDestroy() {
             window.removeEventListener('keyup', this.handleKey);
+            this.mediaQuery.removeEventListener('change', this.respondToMediaChanges)
         },
     }
 </script>
@@ -97,46 +105,40 @@
 <style scoped lang='scss'>
     @import '../main';
 
-
-    .mobile-list {
-        display: none;
-    }
-    @media screen and (max-width: 700px) {
-        .desktop-list {
-            display: none;
-        }
-        .mobile-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            table {
-                border: 1px solid #ccc;
-                flex-grow: 1;
-                margin: 10px;
-                border-spacing: 0;
-            }
-            .list__item td {
-                padding-left: 10px;
-            }
-            .list__item th {
-                padding: 6px;
-            }
-            th {
-                text-align: start;
-                background-color: #eee;
-                color: $primary;
-                font-weight: normal;
-            }
-        }
-    }
-
-
     .desktop-list {
         width: 100%;
         border-spacing: 0;
 
         th {
             padding: 0;
+        }
+    }
+
+    .mobile-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        table {
+            border: 1px solid #ccc;
+            flex-grow: 1;
+            margin: 10px;
+            border-spacing: 0;
+        }
+
+        .list__item td {
+            padding-left: 10px;
+        }
+
+        .list__item th {
+            padding: 6px;
+        }
+
+        th {
+            text-align: start;
+            background-color: #eee;
+            color: $primary;
+            font-weight: normal;
         }
     }
 

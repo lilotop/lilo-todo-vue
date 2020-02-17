@@ -33,16 +33,19 @@
             this.$el.querySelector('.title').focus();
 
             // media query - responsive ui support
-            let respondToMediaChanges = (mediaQuery) => {
+            this.respondToMediaChanges = (mediaQuery) => {
                 if(mediaQuery.matches){
                     this.checkBoxSize = 30;
                 } else {
                     this.checkBoxSize = 14;
                 }
             };
-            let mediaQuery = window.matchMedia("(max-width: 700px)");
-            respondToMediaChanges(mediaQuery); // call listener function once
-            mediaQuery.addEventListener('change', respondToMediaChanges); // register for changes
+            this.mediaQuery = window.matchMedia("(max-width: 700px)");
+            this.respondToMediaChanges(this.mediaQuery); // call listener function once
+            this.mediaQuery.addEventListener('change', this.respondToMediaChanges); // register for changes
+        },
+        beforeDestroy() {
+            this.mediaQuery.removeEventListener('change', this.respondToMediaChanges)
         }
     }
 </script>
