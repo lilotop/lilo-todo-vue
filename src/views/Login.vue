@@ -1,9 +1,11 @@
 <template>
     <div class="login">
         <form @submit.prevent="login">
+            This is a demo version of the app, so the credentials are pre-filled. <br>
+            Just click the LOGIN button to continue. <br>
             <input type="text" v-model="user">
             <input type="password" v-model="password">
-            <button>Login</button>
+            <button class="btn">Login</button>
         </form>
     </div>
 </template>
@@ -28,9 +30,4 @@
     }
 </script>
 <style scoped>
-    .about {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 </style>

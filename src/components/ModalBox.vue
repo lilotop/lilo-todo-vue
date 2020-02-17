@@ -108,4 +108,10 @@
             flex-basis: 0;
         }
     }
+    @media screen and (max-width: 700px) {
+        .btn {
+            height: 60px;
+        }
+    }
+
 </style>

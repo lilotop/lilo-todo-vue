@@ -5,7 +5,7 @@
             <Priority v-model="todo.priority"/>
         </div>
         <div class="done"><label for="done">Done? </label>
-            <CheckBox v-model="todo.done" id="done"/>
+            <CheckBox v-model="todo.done" id="done" :size="checkBoxSize"/>
         </div>
         <div class="project">
             Project:
@@ -23,9 +23,26 @@
     export default {
         name: "TodoEditor",
         components: { ProjectSelector, CheckBox, Priority },
+        data() {
+            return {
+                checkBoxSize:14
+            }
+        },
         props: ['todo'],
         mounted() {
             this.$el.querySelector('.title').focus();
+
+            // media query - responsive ui support
+            let respondToMediaChanges = (mediaQuery) => {
+                if(mediaQuery.matches){
+                    this.checkBoxSize = 30;
+                } else {
+                    this.checkBoxSize = 14;
+                }
+            };
+            let mediaQuery = window.matchMedia("(max-width: 700px)");
+            respondToMediaChanges(mediaQuery); // call listener function once
+            mediaQuery.addEventListener('change', respondToMediaChanges); // register for changes
         }
     }
 </script>
@@ -39,6 +56,11 @@
         grid-template-columns: auto auto;
         grid-column-gap: 10px;
         grid-row-gap: 10px;
+    }
+    @media screen and (max-width: 700px) {
+        .todo-editor {
+            grid-template-rows: 40px 40px 40px auto;
+        }
     }
 
     .title {
@@ -54,14 +76,17 @@
         text-decoration-color: gray;
     }
 
-    .priority {
-        height: 20px;
+    .done {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .project {
         grid-column: 1/3;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     .description {

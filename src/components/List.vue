@@ -1,20 +1,32 @@
 <template>
     <div class="list">
-            <table>
-                <tr class="list__headers">
-                    <th class="list__headers__selection-indicator"></th>
-                    <th class="list__headers__column" v-for="col in columns">{{col.header}}</th>
-                </tr>
-                <tr class="list__item" v-for="(item, index) in items"
-                    @click="itemSelected(item)">
-                    <td class="list__selection-indicator" :class="index === pointerIndex ? 'list__selection-indicator_selected':''"></td>
-                    <td class="list__item__column" v-for="col in columns">
-                        <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
-                        <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
-                    </td>
-                </tr>
+        <table class="desktop-list">
+            <tr class="list__headers">
+                <th class="list__headers__selection-indicator"></th>
+                <th class="list__headers__column" v-for="col in columns">{{col.header}}</th>
+            </tr>
+            <tr class="list__item" v-for="(item, index) in items"
+                @click="itemSelected(item)">
+                <td class="list__selection-indicator" :class="index === pointerIndex ? 'list__selection-indicator_selected':''"></td>
+                <td class="list__item__column" v-for="col in columns">
+                    <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
+                    <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
+                </td>
+            </tr>
+        </table>
+        <div class="mobile-list">
+            <table class="list__item" v-for="item in items"
+                   @click="itemSelected(item)">
+            <tr v-for="col in columns">
+                <th>{{col.header}}</th>
+                <td class="list__item__column">
+                    <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
+                    <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
+                </td>
+            </tr>
             </table>
         </div>
+    </div>
 </template>
 
 <script>
@@ -27,7 +39,7 @@
             handleKey(e) {
 
                 // only respond to key strokes outside input elements
-                if(e.target.localName !== 'body') {
+                if (e.target.localName !== 'body') {
                     return;
                 }
 
@@ -72,8 +84,7 @@
             columns: Array,
             items: Array
         },
-        computed: {
-        },
+        computed: {},
         mounted() {
             window.addEventListener('keyup', this.handleKey);
         },
@@ -86,12 +97,44 @@
 <style scoped lang='scss'>
     @import '../main';
 
-    .list {
+
+    .mobile-list {
+        display: none;
+    }
+    @media screen and (max-width: 700px) {
+        .desktop-list {
+            display: none;
+        }
+        .mobile-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            table {
+                border: 1px solid #ccc;
+                flex-grow: 1;
+                margin: 10px;
+                border-spacing: 0;
+            }
+            .list__item td {
+                padding-left: 10px;
+            }
+            .list__item th {
+                padding: 6px;
+            }
+            th {
+                text-align: start;
+                background-color: #eee;
+                color: $primary;
+                font-weight: normal;
+            }
+        }
     }
 
-    table {
+
+    .desktop-list {
         width: 100%;
         border-spacing: 0;
+
         th {
             padding: 0;
         }
