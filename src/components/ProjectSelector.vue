@@ -54,4 +54,10 @@
     select option:checked,option:hover,option:active,option:focus {
         background-color: $primary !important;
     }
+    @media screen and (max-width: 700px) {
+        select {
+            height: 40px;
+        }
+    }
+
 </style>

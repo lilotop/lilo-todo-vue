@@ -1,3 +1,4 @@
+import './mocks'
 import { shallowMount } from '@vue/test-utils'
 import List from '@/components/List.vue'
 
