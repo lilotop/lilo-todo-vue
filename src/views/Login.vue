@@ -7,7 +7,7 @@
             <input type="password" v-model="password">
             <button class="btn">Login</button>
         </form>
-        <ModalBox v-if="modalOpen" title="Cannot Login" cancel-button-text="OK" only-cancel @cancel="modalOpen = !modalOpen">
+        <ModalBox v-if="modalOpen" title="Cannot Login" hide-cancel @ok="modalOpen = !modalOpen">
             {{errorMessage}}
         </ModalBox>
         <BlockUI :block="blockUI" text="Logging in user..."></BlockUI>

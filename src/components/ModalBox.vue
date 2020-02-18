@@ -6,8 +6,8 @@
                 <slot><i>no content</i></slot>
             </div>
             <div class="modal__buttons">
-                <button class="btn" @click="$emit('ok')" v-if="!onlyCancel">{{okButtonText}}</button>
-                <button class="btn" @click="$emit('cancel')">{{cancelButtonText}}</button>
+                <button class="btn" @click="$emit('ok')" v-if="!hideOK">{{okButtonText}}</button>
+                <button class="btn" @click="$emit('cancel')" v-if="!hideCancel">{{cancelButtonText}}</button>
             </div>
         </div>
     </div>
@@ -26,7 +26,8 @@
                 type: String,
                 default: 'Cancel'
             },
-            onlyCancel: Boolean
+            hideCancel: Boolean,
+            hideOK: Boolean
         },
         mounted() {
             window.addEventListener('keydown', this.handleKey);
@@ -37,7 +38,11 @@
         methods: {
             handleKey(e) {
                 if (e.keyCode === 27) {
-                    this.$emit('cancel');
+                    if(this.hideCancel){
+                        this.$emit('ok');
+                    }else {
+                        this.$emit('cancel');
+                    }
                 }
                 if (e.keyCode === 9) {
                     let focusable = this.$el.querySelectorAll('input,button,select,.check-box');
