@@ -7,24 +7,47 @@
             <input type="password" v-model="password">
             <button class="btn">Login</button>
         </form>
+        <ModalBox v-if="modalOpen" title="Cannot Login" cancel-button-text="OK" only-cancel @cancel="modalOpen = !modalOpen">
+            {{errorMessage}}
+        </ModalBox>
+        <BlockUI :block="blockUI" text="Logging in user..."></BlockUI>
     </div>
 </template>
 <script>
     import services from "../services";
+    import ModalBox from "../components/ModalBox";
+    import BlockUI from "../components/BlockUI";
+    import {get} from 'lodash';
 
     export default {
         name: 'login',
+        components: { BlockUI, ModalBox },
         data() {
             return {
                 user: 'red',
-                password: '123456'
+                password: '123456',
+                modalOpen: false,
+                errorMessage:'',
+                blockUI: false,
             }
         },
         methods: {
             async login() {
-                let res = await services.login(this.user, this.password);
-                this.$cookies.set('token',res.data.token,'7d');
-                this.$router.push({name:'todos'});
+                try {
+                    this.blockUI = true;
+                    let res = await services.login(this.user, this.password);
+                    this.$cookies.set('token', res.data.token, '7d');
+                    await this.$router.push({ name: 'todos' });
+                } catch (e) {
+                    if(get(e,'response.status') === 401) {
+                        this.errorMessage = 'Incorrect user name or password.';
+                    } else {
+                        this.errorMessage = 'Could not login. Please try again later.'
+                    }
+                    this.modalOpen = true;
+                } finally {
+                    this.blockUI = false;
+                }
             }
         }
     }
