@@ -6,10 +6,13 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
   .about {
     display: flex;
     flex-direction: column;
     align-items: center;
+    img {
+      width: 80vw;
+    }
   }
 </style>

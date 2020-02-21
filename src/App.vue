@@ -2,7 +2,7 @@
     <div id="app">
         <OfflineIndicator></OfflineIndicator>
         <div class="app__masthead">
-            <div class="app__title">TODO App <span v-if="email"> - {{email}}</span></div>
+            <div class="app__title">Lilo's TODO<span v-if="email"> - {{email}}</span></div>
             <NavMenu :links="navLinks"></NavMenu>
         </div>
         <router-view/>
