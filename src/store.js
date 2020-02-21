@@ -7,6 +7,14 @@ let store = Vue.observable({
     todos: [],
     user: {},
     error: null,
+    handleError(err) {
+        store.reset();
+        if(get(err,'response.status') === 401) {
+            return; // it's not an error, just not logged in yet
+        }
+        store.error = err.message || err.response.status;
+        console.log('Failed to load store, error: ', store.error);
+    },
     getProject(projectId) {
         return find(store.projects, ['_id',projectId])
     },
@@ -19,12 +27,20 @@ let store = Vue.observable({
         }
     },
     async updateTodo(todo) {
-        await services.updateTodo(todo._id, todo);
-        await this.loadFromServer(true);
+        try {
+            await services.updateTodo(todo._id, todo);
+            await this.loadFromServer(true);
+        } catch (e) {
+            this.handleError(e);
+        }
     },
     async addTodo(todo) {
-        await services.addTodo(todo);
-        await this.loadFromServer(true);
+        try {
+            await services.addTodo(todo);
+            await this.loadFromServer(true);
+        } catch (e) {
+            this.handleError(e);
+        }
     },
     async loadFromServer(forceReload) {
         if(!loaded || forceReload) {
@@ -36,13 +52,8 @@ let store = Vue.observable({
                 store.error = null;
                 loaded = true;
             }
-            catch(err){
-                store.reset();
-                if(get(err,'response.status') === 401) {
-                    return; // it's not an error, just not logged in yet
-                }
-                store.error = err.message || err.response.status;
-                console.log('Failed to load store, error: ', store.error);
+            catch(e){
+                this.handleError(e)
             }
         }
     },
