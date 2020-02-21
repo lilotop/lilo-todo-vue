@@ -12,7 +12,7 @@
         <ModalBox v-if="modalOpen" :title="todoForModal.title || '< untitled >'" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
-        <BlockUI :block="blockUI" text="Please wait..."></BlockUI>
+        <BlockUI :block="blockUI" :text="blockMessage"></BlockUI>
     </div>
 </template>
 
@@ -42,6 +42,7 @@
                 blockUI: false,
                 todoForModal: {},
                 modalOpen: false,
+                blockMessage: '',
                 ALL_PROJECTS: 'all',
                 NO_PROJECT: 'none',
                 columns: [
@@ -138,6 +139,7 @@
             },
             async saveChanges() {
 
+                this.blockMessage = 'Saving changes...';
                 this.blockUI = true;
                 if(this.todoForModal._id) {
                     await store.updateTodo(this.todoForModal);
@@ -149,11 +151,11 @@
                 this.todoForModal = {};
             }
         },
-        async beforeRouteEnter(routeTo, routeFrom, next) {
+        async mounted() {
+            this.blockMessage = 'Loading TODOs from server...';
+            this.blockUI = true;
             await store.loadFromServer();
-            next();
-
-
+            this.blockUI = false;
         }
     }
 </script>

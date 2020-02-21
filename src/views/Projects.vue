@@ -1,19 +1,23 @@
 <template>
     <div class="projects">
         <List :columns="columns" :items="projects" @selected="projectSelected"/>
+        <BlockUI :block="blockUI" :text="blockMessage"></BlockUI>
     </div>
 </template>
 
 <script>
     import store from '../store';
     import List from '../components/List';
+    import BlockUI from "../components/BlockUI";
 
     export default {
         name: 'projects',
-        components: { List },
-        async beforeRouteEnter(routeTo, routeFrom, next) {
+        components: { BlockUI, List },
+        async mounted() {
+            this.blockMessage = 'Loading projects from server...';
+            this.blockUI = true;
             await store.loadFromServer();
-            next();
+            this.blockUI = false;
         },
         methods: {
           projectSelected(project) {
@@ -22,6 +26,8 @@
         },
         data() {
             return {
+                blockUI: false,
+                blockMessage: '',
                 columns: [
                     {
                         header: 'Project',
