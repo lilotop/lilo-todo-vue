@@ -34,6 +34,10 @@ let store = Vue.observable({
         await services.addTodo(todo);
         await this.loadFromServer(true);
     },
+    async addProject(project) {
+        await services.addProject(project);
+        await this.loadFromServer(true);
+    },
     async loadFromServer(forceReload) {
         if(!loaded || forceReload) {
             try {
