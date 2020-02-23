@@ -59,6 +59,10 @@
                                 this.errors.push(`${rule.name} fields do not match`);
                             }
                             break;
+                            case 'minLength':
+                                if (getValue(rule.id).length < rule.value) {
+                                    this.errors.push(`${rule.name} must have at least ${rule.value} characters`);
+                                }
                         default:
                             console.error(`Validation rule of type ${rule.type} is not supported`);
                     }

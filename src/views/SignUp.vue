@@ -44,18 +44,18 @@
                 passwordRepeat: '',
                 blockUI: false,
                 validationRules: [
-                    {type: 'required', id: 'username', name: 'Name'},
-                    {type: 'required', id: 'email', name: 'Email'},
-                    {type: 'email', id: 'email', name: 'Email'},
-                    {type: 'required', id: 'password', name: 'Password'},
-                    {type: 'match', id1: 'password', id2:'password-repeat', name: 'Password'},
+                    { type: 'required', id: 'username', name: 'Name' },
+                    { type: 'required', id: 'email', name: 'Email' },
+                    { type: 'email', id: 'email', name: 'Email' },
+                    { type: 'minLength', value: 6, id: 'password', name: 'Password' },
+                    { type: 'match', id1: 'password', id2: 'password-repeat', name: 'Password' },
                 ]
             }
         },
         methods: {
             async signUp() {
 
-                if(!this.$refs.validation.validate()){
+                if (!this.$refs.validation.validate()) {
                     // has validation errors, abort
                     return;
                 }
