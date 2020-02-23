@@ -18,6 +18,7 @@
         </form>
         <Toast ref="toast"></Toast>
         <BlockUI :block="blockUI" text="Logging in user..."></BlockUI>
+        <FormValidation ref="validation" :rules="validationRules"></FormValidation>
     </div>
 </template>
 <script>
@@ -26,19 +27,30 @@
     import BlockUI from "../components/BlockUI";
     import { get } from 'lodash';
     import Toast from "../components/Toast";
+    import FormValidation from "../components/FormValidation";
 
     export default {
         name: 'login',
-        components: { Toast, BlockUI, ModalBox },
+        components: { FormValidation, Toast, BlockUI, ModalBox },
         data() {
             return {
                 user: '',
                 password: '',
                 blockUI: false,
+                validationRules: [
+                    {type: 'required', id: 'username', name: 'Name'},
+                    {type: 'required', id: 'password', name: 'Password'},
+                ]
             }
         },
         methods: {
             async login() {
+
+                if(!this.$refs.validation.validate()){
+                    // has validation errors, abort
+                    return;
+                }
+
                 try {
                     this.blockUI = true;
                     let res = await services.login(this.user, this.password);

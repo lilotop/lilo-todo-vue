@@ -22,18 +22,20 @@
         </form>
         <BlockUI :block="blockUI" :text="`Signing up '${user}'...`"></BlockUI>
         <Toast ref="toast"></Toast>
+        <FormValidation ref="validation" :rules="validationRules"></FormValidation>
     </div>
 </template>
 <script>
     import services from "../services";
     import ModalBox from "../components/ModalBox";
     import BlockUI from "../components/BlockUI";
-    import { get, some } from 'lodash';
+    import { get } from 'lodash';
     import Toast from "../components/Toast";
+    import FormValidation from "../components/FormValidation";
 
     export default {
         name: 'signUp',
-        components: { Toast, BlockUI, ModalBox },
+        components: { FormValidation, Toast, BlockUI, ModalBox },
         data() {
             return {
                 user: '',
@@ -41,20 +43,22 @@
                 password: '',
                 passwordRepeat: '',
                 blockUI: false,
+                validationRules: [
+                    {type: 'required', id: 'username', name: 'Name'},
+                    {type: 'required', id: 'email', name: 'Email'},
+                    {type: 'email', id: 'email', name: 'Email'},
+                    {type: 'required', id: 'password', name: 'Password'},
+                    {type: 'match', id1: 'password', id2:'password-repeat', name: 'Password'},
+                ]
             }
         },
         methods: {
             async signUp() {
 
-                if (this.password !== this.passwordRepeat) {
-                    this.$refs.toast.popError('Passwords do not match!');
+                if(!this.$refs.validation.validate()){
+                    // has validation errors, abort
                     return;
                 }
-                if (some([this.user, this.email, this.password, this.passwordRepeat], value => value.length === 0)) {
-                    this.$refs.toast.popError('All fields are mandatory, please complete the form');
-                    return;
-                }
-
 
                 try {
                     this.blockUI = true;
