@@ -14,6 +14,7 @@
         </ModalBox>
         <BlockUI :block="blockUI" :text="blockMessage"></BlockUI>
         <Toast ref="toast"></Toast>
+        <FormValidation ref="validation" :rules="validationRules"></FormValidation>
     </div>
 </template>
 
@@ -27,10 +28,12 @@
     import TodoEditor from '../components/TodoEditor';
     import BlockUI from "../components/BlockUI";
     import Toast from "../components/Toast";
+    import FormValidation from "../components/FormValidation";
 
     export default {
         name: 'todos',
         components: {
+            FormValidation,
             Toast,
             BlockUI,
             TodoEditor,
@@ -79,6 +82,9 @@
                         type: Boolean
                     }
 
+                ],
+                validationRules: [
+                    {type: 'required', id:'todo-title', name: 'Title'}
                 ]
             }
         },
@@ -141,6 +147,11 @@
                 this.todoForModal = {};
             },
             async saveChanges() {
+
+                if(!this.$refs.validation.validate()){
+                    // has validation errors, abort
+                    return;
+                }
 
                 try {
                     this.blockMessage = 'Saving changes...';

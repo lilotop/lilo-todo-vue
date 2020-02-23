@@ -1,6 +1,6 @@
 <template>
     <div class="todo-editor">
-        <input v-model="todo.title" type="text" class="title" :class="{title_done: todo.done}">
+        <input v-model="todo.title" type="text" class="title" id="todo-title" :class="{title_done: todo.done}">
         <div class="priority">Priority:
             <Priority v-model="todo.priority"/>
         </div>
