@@ -20,10 +20,8 @@
                     <button class="btn">SIGN UP</button> or <router-link to="/login">login here</router-link></span>
             </div>
         </form>
-        <ModalBox v-if="modalOpen" title="Sign up failed" hide-cancel @ok="modalOpen = !modalOpen">
-            {{errorMessage}}
-        </ModalBox>
         <BlockUI :block="blockUI" :text="`Signing up '${user}'...`"></BlockUI>
+        <Toast ref="toast"></Toast>
     </div>
 </template>
 <script>
@@ -31,36 +29,32 @@
     import ModalBox from "../components/ModalBox";
     import BlockUI from "../components/BlockUI";
     import { get, some } from 'lodash';
+    import Toast from "../components/Toast";
 
     export default {
         name: 'signUp',
-        components: { BlockUI, ModalBox },
+        components: { Toast, BlockUI, ModalBox },
         data() {
             return {
                 user: '',
                 email: '',
                 password: '',
                 passwordRepeat: '',
-                modalOpen: false,
-                errorMessage: '',
                 blockUI: false,
             }
         },
         methods: {
             async signUp() {
 
-                this.errorMessage = '';
                 if (this.password !== this.passwordRepeat) {
-                    this.errorMessage = 'Passwords do not match!';
-                }
-                if (some([this.user, this.email, this.password, this.passwordRepeat], value => value.length === 0)) {
-                    this.errorMessage = 'All fields are mandatory, please complete the form';
-                }
-
-                if (this.errorMessage) {
-                    this.modalOpen = true;
+                    this.$refs.toast.popError('Passwords do not match!');
                     return;
                 }
+                if (some([this.user, this.email, this.password, this.passwordRepeat], value => value.length === 0)) {
+                    this.$refs.toast.popError('All fields are mandatory, please complete the form');
+                    return;
+                }
+
 
                 try {
                     this.blockUI = true;
@@ -69,11 +63,16 @@
                     await this.$router.push({ name: 'todos' });
                 } catch (e) {
                     if (get(e, 'response.status') === 401) {
-                        this.errorMessage = 'Incorrect user name or password.';
+                        this.$refs.toast.popError('Incorrect user name or password.');
                     } else {
-                        this.errorMessage = 'Could not sign up. Please try again later.'
+                        let errorCategory = get(e, 'response.data.errorCategory');
+                        if (errorCategory === 'duplicate') {
+                            this.$refs.toast.popError('User or email already exists.');
+                        } else {
+                            this.$refs.toast.popError('Could not sign up. Please try again later.');
+                        }
                     }
-                    this.modalOpen = true;
+
                 } finally {
                     this.blockUI = false;
                 }

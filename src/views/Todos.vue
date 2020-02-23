@@ -13,22 +13,25 @@
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
         <BlockUI :block="blockUI" :text="blockMessage"></BlockUI>
+        <Toast ref="toast"></Toast>
     </div>
 </template>
 
 <script>
     import store from '../store';
     import { getPriorityName, getShortDateTime } from '../utils';
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, get } from 'lodash';
     import List from '../components/List';
     import ProjectSelector from '../components/ProjectSelector';
     import ModalBox from '../components/ModalBox';
     import TodoEditor from '../components/TodoEditor';
     import BlockUI from "../components/BlockUI";
+    import Toast from "../components/Toast";
 
     export default {
         name: 'todos',
         components: {
+            Toast,
             BlockUI,
             TodoEditor,
             ModalBox,
@@ -149,8 +152,11 @@
                     }
                     this.modalOpen = false;
                     this.todoForModal = {};
+                    this.$refs.toast.popSuccess('TODO Saved');
                 } catch (e) {
                     console.log(e);
+                    let error = get(e,'response.data.error', 'Unknown error');
+                    this.$refs.toast.popError(error);
                 } finally {
                     this.blockUI = false;
                 }

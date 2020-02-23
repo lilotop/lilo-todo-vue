@@ -16,9 +16,7 @@
                     <button class="btn">Login</button> or <router-link to="/sign-up">sign up</router-link> for free</span>
             </div>
         </form>
-        <ModalBox v-if="modalOpen" title="Cannot Login" hide-cancel @ok="modalOpen = !modalOpen">
-            {{errorMessage}}
-        </ModalBox>
+        <Toast ref="toast"></Toast>
         <BlockUI :block="blockUI" text="Logging in user..."></BlockUI>
     </div>
 </template>
@@ -27,16 +25,15 @@
     import ModalBox from "../components/ModalBox";
     import BlockUI from "../components/BlockUI";
     import { get } from 'lodash';
+    import Toast from "../components/Toast";
 
     export default {
         name: 'login',
-        components: { BlockUI, ModalBox },
+        components: { Toast, BlockUI, ModalBox },
         data() {
             return {
                 user: '',
                 password: '',
-                modalOpen: false,
-                errorMessage: '',
                 blockUI: false,
             }
         },
@@ -49,11 +46,10 @@
                     await this.$router.push({ name: 'todos' });
                 } catch (e) {
                     if (get(e, 'response.status') === 401) {
-                        this.errorMessage = 'Incorrect user name or password.';
+                        this.$refs.toast.popError('Incorrect user name or password.');
                     } else {
-                        this.errorMessage = 'Could not login. Please try again later.'
+                        this.$refs.toast.popError('Could not login. Please try again later.');
                     }
-                    this.modalOpen = true;
                 } finally {
                     this.blockUI = false;
                 }
