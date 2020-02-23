@@ -64,12 +64,18 @@
         margin-bottom: 60px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         font-weight: bold;
         color: #2c3e50;
-
+        position: sticky;
+        top: 0;
+        padding: 10px;
+        background-color: white;
+        border: 1px solid #ccc;
     }
 
     @media screen and (max-width: 700px) {
+
         #app {
             margin: 0;
         }
