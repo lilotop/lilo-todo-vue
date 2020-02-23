@@ -68,10 +68,6 @@
 
     .title {
         grid-column: span 2;
-
-        &:focus {
-            outline: black auto 2px;
-        }
     }
 
     .title_done {
@@ -95,10 +91,6 @@
     .description {
         grid-column: span 2;
         min-height: 100px;
-
-        &:focus {
-            outline: black auto 2px;
-        }
     }
 
     ::selection {

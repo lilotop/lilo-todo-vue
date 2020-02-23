@@ -14,8 +14,8 @@ const apiClient = axios.create({
 
 apiClient.interceptors.response.use(response => response, error => {
     if (error.response && error.response.status === 401) {
-        if(router.currentRoute.name !== 'login') {
-            router.push({name:'login'});
+        if (router.currentRoute.name !== 'login') {
+            router.push({ name: 'login' });
         }
     }
     return Promise.reject(error)
@@ -26,7 +26,7 @@ apiClient.interceptors.request.use(
         let token = Vue.$cookies.get('token');
 
         if (token) {
-            config.headers['Authorization'] = `Bearer ${ token }`
+            config.headers['Authorization'] = `Bearer ${token}`
         }
 
         return config
@@ -69,7 +69,10 @@ export default {
         return apiClient.get('/auth/user');
     },
     login(name, password) {
-        return apiClient.post('/auth/login',{name, password});
+        return apiClient.post('/auth/login', { name, password });
+    },
+    signUp(name, email, password) {
+        return apiClient.post('/auth/register', { name, email, password });
     },
     logout() {
         Vue.$cookies.remove('token');

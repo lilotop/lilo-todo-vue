@@ -127,7 +127,7 @@
 
                 // if we're filtered on specific project, preselect this project for the new item
                 let project = this.$route.query.project;
-                if(project && project !== this.NO_PROJECT && project !== this.ALL_PROJECTS) {
+                if (project && project !== this.NO_PROJECT && project !== this.ALL_PROJECTS) {
                     this.todoForModal.project = project;
                 }
 
@@ -139,16 +139,21 @@
             },
             async saveChanges() {
 
-                this.blockMessage = 'Saving changes...';
-                this.blockUI = true;
-                if(this.todoForModal._id) {
-                    await store.updateTodo(this.todoForModal);
-                } else {
-                    await store.addTodo(this.todoForModal);
+                try {
+                    this.blockMessage = 'Saving changes...';
+                    this.blockUI = true;
+                    if (this.todoForModal._id) {
+                        await store.updateTodo(this.todoForModal);
+                    } else {
+                        await store.addTodo(this.todoForModal);
+                    }
+                    this.modalOpen = false;
+                    this.todoForModal = {};
+                } catch (e) {
+                    console.log(e);
+                } finally {
+                    this.blockUI = false;
                 }
-                this.blockUI = false;
-                this.modalOpen = false;
-                this.todoForModal = {};
             }
         },
         async mounted() {
@@ -166,17 +171,21 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .todos__controls__create-button {
             margin-right: 10px;
         }
+
         .todos__controls__filter {
             display: flex;
+
             .project-selector {
                 margin-left: 10px;
             }
 
         }
     }
+
     @media screen and (max-width: 700px) {
         .todos__controls {
             .todos__controls__filter {
@@ -186,6 +195,7 @@
                     margin-left: 0;
                 }
             }
+
             .btn {
                 height: 60px;
             }

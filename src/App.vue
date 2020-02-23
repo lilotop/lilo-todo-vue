@@ -39,6 +39,7 @@
                     links.push({ label: 'Logout', handler: this.logout });
                 } else {
                     links.push({ label: 'Login', path: '/login' });
+                    links.push({ label: 'SignUp', path: '/sign-up' });
                 }
                 return links;
             }
@@ -91,6 +92,16 @@
         &:focus {
             outline: black auto 2px;
         }
+    }
+
+    input, textarea {
+        &:focus {
+            outline: $primary auto 1px;
+        }
+    }
+
+    a {
+        color: #2c3e50;
     }
 
     .btn {
