@@ -9,12 +9,17 @@
         <List :columns="columns" :items="todos" @selected="showTodo"/>
 
         <!-- helper components -->
-        <ModalBox v-if="modalOpen" :title="todoForModal.title || '< untitled >'" ok-button-text="Save" @ok="saveChanges" @cancel="closeModal">
+        <ModalBox v-if="modalOpen" :title="todoForModal.title || '< untitled >'" ok-button-text="Save"
+                  @ok="saveChanges" @cancel="closeModal" :menu-items="editorMenuItems">
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
-        <BlockUI :block="blockUI" :text="blockMessage"></BlockUI>
+        <BlockUI :block="isUIBlocked" :text="blockMessage"></BlockUI>
         <Toast ref="toast"></Toast>
         <FormValidation ref="validation" :rules="validationRules"></FormValidation>
+        <ModalBox v-if="showDeleteConfirm" title="Are you sure?" ok-button-text="Yes, DELETE!"
+                  @ok="deleteTodo" @cancel="showDeleteConfirm = false">
+            <h4>Delete this TODO item?</h4>
+        </ModalBox>
     </div>
 </template>
 
@@ -26,16 +31,16 @@
     import ProjectSelector from '../components/ProjectSelector';
     import ModalBox from '../components/ModalBox';
     import TodoEditor from '../components/TodoEditor';
-    import BlockUI from "../components/BlockUI";
     import Toast from "../components/Toast";
     import FormValidation from "../components/FormValidation";
+    import BlockUI from "../components/BlockUI";
 
     export default {
         name: 'todos',
         components: {
+            BlockUI,
             FormValidation,
             Toast,
-            BlockUI,
             TodoEditor,
             ModalBox,
             List, ProjectSelector
@@ -45,9 +50,10 @@
         },
         data() {
             return {
-                blockUI: false,
+                isUIBlocked: false,
                 todoForModal: {},
                 modalOpen: false,
+                showDeleteConfirm: false,
                 blockMessage: '',
                 ALL_PROJECTS: 'all',
                 NO_PROJECT: 'none',
@@ -84,8 +90,9 @@
 
                 ],
                 validationRules: [
-                    {type: 'required', id:'todo-title', name: 'Title'}
-                ]
+                    { type: 'required', id: 'todo-title', name: 'Title' }
+                ],
+                editorMenuItems: null
             }
         },
         computed: {
@@ -117,6 +124,14 @@
             }
         },
         methods: {
+            blockUI(message) {
+                this.blockMessage = message;
+                this.isUIBlocked = true;
+            },
+            unblockUI() {
+                this.blockMessage = '';
+                this.isUIBlocked = false;
+            },
             getDateTime(isoDate) {
                 return getShortDateTime(isoDate);
             },
@@ -127,12 +142,39 @@
             getPriorityName(priority) {
                 return getPriorityName(priority)
             },
+            async saveAndNew() {
+                await this.saveChanges();
+                this.modalOpen = true;
+            },
+            async deleteTodo() {
+                this.showDeleteConfirm = false;
+                this.blockUI('Deleting...');
+                try {
+                    await store.deleteTodo(this.todoForModal._id);
+                    this.todoForModal = {};
+                    this.modalOpen = false;
+                    this.$refs.toast.popSuccess('Deleted');
+                } catch (e) {
+                    console.error(e);
+                    this.$refs.toast.popError('Unable to delete');
+                } finally {
+                    this.unblockUI();
+                }
+
+            },
             showTodo(todo) {
                 this.todoForModal = cloneDeep(todo);
+                this.editorMenuItems = [
+                    { label: 'Save & New', handler: this.saveAndNew },
+                    { label: 'Delete', handler: () => this.showDeleteConfirm = true },
+                ];
                 this.modalOpen = true;
             },
             newTodo() {
                 this.todoForModal = {};
+                this.editorMenuItems = [
+                    { label: 'Save & New', handler: this.saveAndNew }
+                ];
 
                 // if we're filtered on specific project, preselect this project for the new item
                 let project = this.$route.query.project;
@@ -148,14 +190,13 @@
             },
             async saveChanges() {
 
-                if(!this.$refs.validation.validate()){
+                if (!this.$refs.validation.validate()) {
                     // has validation errors, abort
                     return;
                 }
 
                 try {
-                    this.blockMessage = 'Saving changes...';
-                    this.blockUI = true;
+                    this.blockUI('Saving changes...');
                     if (this.todoForModal._id) {
                         await store.updateTodo(this.todoForModal);
                     } else {
@@ -166,18 +207,17 @@
                     this.$refs.toast.popSuccess('TODO Saved');
                 } catch (e) {
                     console.log(e);
-                    let error = get(e,'response.data.error', 'Unknown error');
+                    let error = get(e, 'response.data.error', 'Unknown error');
                     this.$refs.toast.popError(error);
                 } finally {
-                    this.blockUI = false;
+                    this.unblockUI();
                 }
             }
         },
         async mounted() {
-            this.blockMessage = 'Loading TODOs from server...';
-            this.blockUI = true;
+            this.blockUI('Loading TODOs from server...');
             await store.loadFromServer();
-            this.blockUI = false;
+            this.unblockUI();
         }
     }
 </script>

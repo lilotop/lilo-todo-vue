@@ -1,7 +1,13 @@
 <template>
     <div class="modal__backdrop">
         <div class="modal" role="dialog" aria-modal="true">
-            <div v-if="title" class="modal__header">{{title}}</div>
+            <div v-if="title" class="modal__header">
+                <div class="modal__header__title">{{title}}</div>
+                <button class="modal__header__menu-toggle" v-if="menuItems" @click="menuOpen = !menuOpen">{{menuOpen ? '&#9650;' : '&#9776;'}}</button>
+                <div class="modal__header__menu" v-if="menuOpen" @click="menuOpen = !menuOpen">
+                    <button v-for="menuItem in menuItems" class="btn" @click="menuItem.handler">{{menuItem.label}}</button>
+                </div>
+            </div>
             <div class="modal__body">
                 <slot><i>no content</i></slot>
             </div>
@@ -16,6 +22,11 @@
 <script>
     export default {
         name: "ModalBox",
+        data() {
+            return {
+                menuOpen: false
+            }
+        },
         props: {
             title: String,
             okButtonText: {
@@ -27,7 +38,8 @@
                 default: 'Cancel'
             },
             hideCancel: Boolean,
-            hideOK: Boolean
+            hideOK: Boolean,
+            menuItems: Array
         },
         mounted() {
             window.addEventListener('keydown', this.handleKey);
@@ -38,9 +50,9 @@
         methods: {
             handleKey(e) {
                 if (e.keyCode === 27) {
-                    if(this.hideCancel){
+                    if (this.hideCancel) {
                         this.$emit('ok');
-                    }else {
+                    } else {
                         this.$emit('cancel');
                     }
                 }
@@ -87,7 +99,7 @@
     .modal {
         background: #FFFFFF;
         box-shadow: 2px 2px 20px 1px;
-        overflow-x: auto;
+        //overflow-x: auto;
         display: flex;
         flex-direction: column;
         min-width: 250px;
@@ -97,6 +109,46 @@
         padding: 6px;
         background: $primary;
         color: $text_on-primary;
+        position: relative;
+        overflow: visible;
+        display: flex;
+        align-items: center;
+
+        .modal__header__title {
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+
+        .modal__header__menu-toggle {
+            justify-self: end;
+            height: 30px;
+            width: 30px;
+        }
+
+        .modal__header__menu {
+            position: absolute;
+            right: 6px;
+            top: 35px;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border: 1px solid #ccc;
+            color: black;
+
+            .btn {
+                border: none;
+                background-color: white;
+                color: black;
+                height: 30px;
+                padding: 0 5px;
+                text-transform: none;
+
+                &:hover {
+                    background-color: $primary;
+                    color: $text_on-primary;
+                }
+            }
+        }
     }
 
     .modal__body {
@@ -113,9 +165,26 @@
             flex-basis: 0;
         }
     }
+
     @media screen and (max-width: 700px) {
         .btn {
             height: 60px;
+        }
+        .modal__header {
+            height: 40px;
+
+            .modal__header__menu-toggle {
+                height: 40px;
+                width: 40px;
+            }
+
+            .modal__header__menu {
+                right: 7px;
+                top: 45px;
+                .btn {
+                    height: 60px;
+                }
+            }
         }
     }
 
