@@ -5,7 +5,7 @@
   "scripts": {
     "mock": "json-server ./tests/mockData.json --port 4242 --routes ./tests/mockRoutes.json",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --report",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e"
   },
