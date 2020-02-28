@@ -29,7 +29,7 @@
     import services from "../services";
     import ModalBox from "../components/ModalBox";
     import BlockUI from "../components/BlockUI";
-    import { get } from 'lodash';
+    import get from 'lodash-es/get';
     import Toast from "../components/Toast";
     import FormValidation from "../components/FormValidation";
 

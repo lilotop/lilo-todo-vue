@@ -1,5 +1,7 @@
 import Vue from 'vue';
-import { find, filter, get } from "lodash";
+import get from 'lodash-es/get';
+import filter from 'lodash-es/filter';
+import find from 'lodash-es/find';
 import services from "./services";
 let loaded;
 let store = Vue.observable({

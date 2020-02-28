@@ -26,7 +26,8 @@
 <script>
     import store from '../store';
     import { getPriorityName, getShortDateTime } from '../utils';
-    import { cloneDeep, get } from 'lodash';
+    import get from 'lodash-es/get';
+    import cloneDeep from 'lodash-es/cloneDeep';
     import List from '../components/List';
     import ProjectSelector from '../components/ProjectSelector';
     import ModalBox from '../components/ModalBox';

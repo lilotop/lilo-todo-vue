@@ -20,7 +20,7 @@
     import BlockUI from "../components/BlockUI";
     import ModalBox from "../components/ModalBox";
     import FormValidation from "../components/FormValidation";
-    import { get } from "lodash";
+    import get from 'lodash-es/get';
     import Toast from "../components/Toast";
 
     export default {
