@@ -1,5 +1,5 @@
 <template>
-    <div class="login">
+    <main class="login">
         <form @submit.prevent="login">
             <img src="../assets/logo.png" alt="logo">
             <p>Welcome to Lilo's TODO application, please login to continue</p>
@@ -7,19 +7,19 @@
                 <router-link to="/sign-up">sign up</router-link>
                 for free
             </p>
-            <div class="form">
+            <section class="form">
                 <label for="username">Name</label>
                 <input type="text" id="username" v-model="user">
                 <label for="password">Password</label>
                 <input type="password" id="password" v-model="password">
                 <span>
                     <button class="btn">Login</button> or <router-link to="/sign-up">sign up</router-link> for free</span>
-            </div>
+            </section>
         </form>
         <Toast ref="toast"></Toast>
         <BlockUI :block="blockUI" text="Logging in user..."></BlockUI>
         <FormValidation ref="validation" :rules="validationRules"></FormValidation>
-    </div>
+    </main>
 </template>
 <script>
     import services from "../services";

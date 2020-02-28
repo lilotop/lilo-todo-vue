@@ -1,8 +1,8 @@
 <template>
-    <div class="projects">
-        <div class="projects__controls">
+    <main class="projects">
+        <section class="projects__controls">
             <button class="projects__controls__create-button btn" @click="newProject">Create New Project</button>
-        </div>
+        </section>
 
         <List :columns="columns" :items="projects" @selected="projectSelected"/>
         <BlockUI :block="blockUI" :text="blockMessage"></BlockUI>
@@ -11,7 +11,7 @@
         </ModalBox>
         <FormValidation ref="validation" :rules="[{type:'required', id:'new-project-name', name: 'Project name'}]"></FormValidation>
         <Toast ref="toast"></Toast>
-    </div>
+    </main>
 </template>
 
 <script>

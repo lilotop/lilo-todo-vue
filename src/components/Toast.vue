@@ -70,7 +70,7 @@
             }
 
             &.info {
-                background: rgba(26, 66, 183, 1);
+                background: rgb(26, 96, 133);
             }
 
             &.success {

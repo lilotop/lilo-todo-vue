@@ -1,14 +1,14 @@
 <template>
-    <div class="about">
+    <main class="about">
         <img src="../assets/logo.png" alt="logo" @click="logoClick">
-        <audio src="../assets/KiP.mp3"></audio>
+        <audio src="../assets/KiP.mp3" aria-hidden="true"></audio>
         <h4>No UI/CSS libraries were hurt (or used) during the development of this app.</h4>
         <h4>Created by Lilo Elia, 2020</h4>
         <h5>Source code available <a href="https://github.com/lilotop/lilo-todo-vue" target="_blank">here</a> (frontend) and
             <a href="https://github.com/lilotop/lilo-todo-server" target="_blank">here</a> (backend)
         </h5>
         <Toast ref="toast"></Toast>
-    </div>
+    </main>
 </template>
 <script>
     import Toast from "../components/Toast";

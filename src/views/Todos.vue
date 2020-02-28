@@ -1,11 +1,11 @@
 <template>
-    <div class="todos">
-        <div class="todos__controls">
+    <main class="todos">
+        <section class="todos__controls">
             <button class="todos__controls__create-button btn" @click="newTodo">Create New Todo</button>
             <div class="todos__controls__filter">Filter by project:
                 <ProjectSelector v-model="projectFilter" :all="ALL_PROJECTS"/>
             </div>
-        </div>
+        </section>
         <List :columns="columns" :items="todos" @selected="showTodo"/>
 
         <!-- helper components -->
@@ -20,7 +20,7 @@
                   @ok="deleteTodo" @cancel="showDeleteConfirm = false">
             <h4>Delete this TODO item?</h4>
         </ModalBox>
-    </div>
+    </main>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="list">
+    <section class="list">
         <table class="desktop-list" v-if="!isSmallScreen">
             <tr class="list__headers">
                 <th class="list__headers__selection-indicator"></th>
@@ -26,7 +26,7 @@
                 </tr>
             </table>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -137,8 +137,8 @@
         th {
             text-align: start;
             background-color: #eee;
-            color: $primary;
-            font-weight: normal;
+            color: $primary_dark;
+            /*font-weight: normal;*/
         }
     }
 
@@ -163,12 +163,13 @@
     }
 
     .list__headers {
-        background: $primary;
+        background: $primary_dark;
         color: $text_on-primary;
 
         .list__headers__column {
             padding: 6px 4px;
             text-align: start;
+            font-weight: normal;
         }
 
     }
