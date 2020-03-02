@@ -13,13 +13,13 @@
                   @ok="saveChanges" @cancel="closeModal" :menu-items="editorMenuItems">
             <TodoEditor :todo="todoForModal"/>
         </ModalBox>
-        <BlockUI :block="isUIBlocked" :text="blockMessage"></BlockUI>
         <Toast ref="toast"></Toast>
         <FormValidation ref="validation" :rules="validationRules"></FormValidation>
         <ModalBox v-if="showDeleteConfirm" title="Are you sure?" ok-button-text="Yes, DELETE!"
                   @ok="deleteTodo" @cancel="showDeleteConfirm = false">
             <h4>Delete this TODO item?</h4>
         </ModalBox>
+        <BlockUI :block="isUIBlocked" :text="blockMessage"></BlockUI>
     </main>
 </template>
 
@@ -28,13 +28,13 @@
     import { getPriorityName, getShortDateTime } from '../utils';
     import get from 'lodash-es/get';
     import cloneDeep from 'lodash-es/cloneDeep';
-    import List from '../components/List';
+    import List from '../components/common/List';
     import ProjectSelector from '../components/ProjectSelector';
-    import ModalBox from '../components/ModalBox';
+    import ModalBox from '../components/common/ModalBox';
     import TodoEditor from '../components/TodoEditor';
-    import Toast from "../components/Toast";
-    import FormValidation from "../components/FormValidation";
-    import BlockUI from "../components/BlockUI";
+    import Toast from "../components/common/Toast";
+    import FormValidation from "../components/common/FormValidation";
+    import BlockUI from "../components/common/BlockUI";
 
     export default {
         name: 'todos',

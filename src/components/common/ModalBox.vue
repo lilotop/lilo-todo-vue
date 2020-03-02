@@ -82,7 +82,7 @@
 
 <style scoped lang="scss">
 
-    @import '../main';
+    @import '../../main';
 
     .modal__backdrop {
         position: fixed;

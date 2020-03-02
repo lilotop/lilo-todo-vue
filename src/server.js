@@ -37,9 +37,15 @@ apiClient.interceptors.request.use(
     }
 );
 
+function saveToken(token) {
+    Vue.$cookies.set('token', token, '7d');
+}
+function clearToken() {
+    Vue.$cookies.remove('token');
+}
 
 export default {
-    getTodos() {
+    async getTodos() {
         return apiClient.get('/todos');
     },
     updateTodo(id, todo) {
@@ -68,13 +74,18 @@ export default {
     getUser() {
         return apiClient.get('/auth/user');
     },
-    login(name, password) {
-        return apiClient.post('/auth/login', { name, password });
+    async login(name, password) {
+        let res = await apiClient.post('/auth/login', { name, password });
+        saveToken(res.data.token);
+        return res;
     },
-    signUp(name, email, password) {
-        return apiClient.post('/auth/register', { name, email, password });
+    async signUp(name, email, password) {
+        let res = await apiClient.post('/auth/register', { name, email, password });
+        saveToken(res.data.token);
+        return res;
+
     },
     logout() {
-        Vue.$cookies.remove('token');
+        clearToken();
     }
 }

@@ -22,12 +22,12 @@
     </main>
 </template>
 <script>
-    import services from "../services";
-    import ModalBox from "../components/ModalBox";
-    import BlockUI from "../components/BlockUI";
+    import server from "../server";
+    import ModalBox from "../components/common/ModalBox";
+    import BlockUI from "../components/common/BlockUI";
     import get from 'lodash-es/get';
-    import Toast from "../components/Toast";
-    import FormValidation from "../components/FormValidation";
+    import Toast from "../components/common/Toast";
+    import FormValidation from "../components/common/FormValidation";
 
     export default {
         name: 'login',
@@ -53,8 +53,7 @@
 
                 try {
                     this.blockUI = true;
-                    let res = await services.login(this.user, this.password);
-                    this.$cookies.set('token', res.data.token, '7d');
+                    await server.login(this.user, this.password);
                     await this.$router.push({ name: 'todos' });
                 } catch (e) {
                     if (get(e, 'response.status') === 401) {

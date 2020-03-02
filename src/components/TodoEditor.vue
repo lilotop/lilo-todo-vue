@@ -1,23 +1,27 @@
 <template>
     <div class="todo-editor">
+        <!--suppress HtmlFormInputWithoutLabel -->
         <input v-model="todo.title" type="text" class="title" id="todo-title" :class="{title_done: todo.done}">
         <div class="priority">Priority:
             <Priority v-model="todo.priority"/>
         </div>
-        <div class="done"><label for="done">Done? </label>
+        <div class="done"><!--suppress XmlInvalidId -->
+            <label for="done">Done? </label>
             <CheckBox v-model="todo.done" id="done" :size="checkBoxSize"/>
         </div>
         <div class="project">
             Project:
             <ProjectSelector v-model="todo.project"/>
         </div>
+
+        <!--suppress HtmlFormInputWithoutLabel -->
         <textarea class="description" v-model="todo.description"></textarea>
     </div>
 </template>
 
 <script>
     import Priority from "./Priority";
-    import CheckBox from "./CheckBox";
+    import CheckBox from "./common/CheckBox";
     import ProjectSelector from "./ProjectSelector";
 
     export default {

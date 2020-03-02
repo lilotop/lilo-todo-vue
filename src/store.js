@@ -2,7 +2,7 @@ import Vue from 'vue';
 import get from 'lodash-es/get';
 import filter from 'lodash-es/filter';
 import find from 'lodash-es/find';
-import services from "./services";
+import server from "./server";
 let loaded;
 let store = Vue.observable({
     projects: [],
@@ -20,6 +20,18 @@ let store = Vue.observable({
     getProject(projectId) {
         return find(store.projects, ['_id',projectId])
     },
+    async updateProject(project) {
+        await server.updateProject(project._id, project);
+        await this.loadFromServer(true);
+    },
+    async addProject(project) {
+        await server.addProject(project);
+        await this.loadFromServer(true);
+    },
+    async deleteProject(id) {
+        await server.deleteProject(id);
+        await this.loadFromServer(true);
+    },
     getTodosByProject(projectId) {
         if(projectId) {
             return filter(store.todos, todo => todo.project === projectId);
@@ -29,25 +41,21 @@ let store = Vue.observable({
         }
     },
     async updateTodo(todo) {
-        await services.updateTodo(todo._id, todo);
+        await server.updateTodo(todo._id, todo);
         await this.loadFromServer(true);
     },
     async addTodo(todo) {
-        await services.addTodo(todo);
+        await server.addTodo(todo);
         await this.loadFromServer(true);
     },
     async deleteTodo(id) {
-        await services.deleteTodo(id);
-        await this.loadFromServer(true);
-    },
-    async addProject(project) {
-        await services.addProject(project);
+        await server.deleteTodo(id);
         await this.loadFromServer(true);
     },
     async loadFromServer(forceReload) {
         if(!loaded || forceReload) {
             try {
-                let res = await Promise.all([services.getTodos(), services.getProjects(), services.getUser()]);
+                let res = await Promise.all([server.getTodos(), server.getProjects(), server.getUser()]);
                 store.todos = res[0].data.data;
                 store.projects = res[1].data.data;
                 store.user = res[2].data.data;

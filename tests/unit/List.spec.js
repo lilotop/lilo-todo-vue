@@ -1,6 +1,6 @@
 import './mocks'
 import { shallowMount } from '@vue/test-utils'
-import List from '@/components/List.vue'
+import List from '@/components/common/List.vue'
 
 describe('List.vue', () => {
 

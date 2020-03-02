@@ -11,7 +11,7 @@
     </main>
 </template>
 <script>
-    import Toast from "../components/Toast";
+    import Toast from "../components/common/Toast";
 
     export default {
         name: 'About',

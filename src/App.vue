@@ -11,16 +11,16 @@
 
 <script>
     import store from "./store";
-    import services from "./services";
-    import OfflineIndicator from "./components/OfflineIndicator";
-    import NavMenu from "./components/NavMenu";
+    import server from "./server";
+    import OfflineIndicator from "./components/common/OfflineIndicator";
+    import NavMenu from "./components/common/NavMenu";
 
     export default {
         components: { NavMenu, OfflineIndicator },
         methods: {
             logout() {
                 store.reset();
-                services.logout();
+                server.logout();
                 this.$router.push({ name: 'login' });
             }
         },

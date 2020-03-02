@@ -1,6 +1,7 @@
 <template>
 <span class="project-selector">
     <span v-if="readonly" v-bind="$attrs">{{getName($attrs.value)}}</span>
+    <!--suppress HtmlFormInputWithoutLabel -->
     <select v-else v-bind="$attrs" @input="$emit('input', $event.target.value)" class="project" :title="getDescription($attrs.value)">
         <option v-if="all" :value="all" :title="getDescription(all)">All</option>
         <option :value="undefined" :title="getDescription()">None</option>
@@ -31,6 +32,11 @@
                 return project ? project.name : 'None';
             },
             getDescription(projectId) {
+                // the component will render before the store is initialized, so return empty string until it does
+                // this happens when the component is initialized with a pre-selected value
+                if(!store.projects.length){
+                    return '';
+                }
                 if(!projectId){
                     return 'Not assigned to any project';
                 } else if (this.all && projectId === this.all){

@@ -10,6 +10,7 @@
                 <td class="list__selection-indicator" :class="index === pointerIndex ? 'list__selection-indicator_selected':''"></td>
                 <td class="list__item__column" v-for="col in columns">
                     <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
+                    <a v-else-if="col.handler" @click="col.handler(item)">{{col.text}}</a>
                     <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
                 </td>
             </tr>
@@ -21,6 +22,7 @@
                     <th>{{col.header}}</th>
                     <td class="list__item__column">
                         <CheckBox v-if="col.type === Boolean" :checked="item[col.field]"/>
+                        <a v-else-if="col.handler" @click="col.handler(item)">{{col.text}}</a>
                         <span v-else>{{col.formatter ? col.formatter(item[col.field]) : item[col.field]}}</span>
                     </td>
                 </tr>
@@ -103,7 +105,7 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../main';
+    @import '../../main';
 
     .desktop-list {
         width: 100%;
@@ -128,6 +130,9 @@
 
         .list__item td {
             padding-left: 10px;
+            a {
+                text-decoration: underline;
+            }
         }
 
         .list__item th {
@@ -159,6 +164,9 @@
 
         td {
             padding: 6px 4px;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     }
 

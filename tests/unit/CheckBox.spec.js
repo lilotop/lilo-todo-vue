@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import CheckBox from '@/components/CheckBox.vue'
+import CheckBox from '@/components/common/CheckBox'
 import Vue from 'vue';
 
 /***

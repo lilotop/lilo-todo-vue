@@ -59,10 +59,11 @@
                                 this.errors.push(`${rule.name} fields do not match`);
                             }
                             break;
-                            case 'minLength':
-                                if (getValue(rule.id).length < rule.value) {
-                                    this.errors.push(`${rule.name} must have at least ${rule.value} characters`);
-                                }
+                        case 'minLength':
+                            if (getValue(rule.id).length < rule.value) {
+                                this.errors.push(`${rule.name} must have at least ${rule.value} characters`);
+                            }
+                            break;
                         default:
                             console.error(`Validation rule of type ${rule.type} is not supported`);
                     }
@@ -104,12 +105,15 @@
                 color: rgba(255, 255, 255, 0.8);
                 font-weight: bold;
             }
+
             .close-tip {
                 color: rgba(255, 255, 255, 0.8);
             }
+
             .validation-error {
                 border-top: 1px solid rgba(255, 255, 255, 0.5);
                 padding: 5px;
+
                 &:last-of-type {
                     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
                 }
