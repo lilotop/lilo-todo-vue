@@ -12,7 +12,7 @@
   "dependencies": {
     "@sentry/browser": "^5.12.5",
     "@sentry/integrations": "^5.12.5",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "core-js": "^3.6.4",
     "lodash-es": "^4.17.15",
     "vue": "^2.6.11",
